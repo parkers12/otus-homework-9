@@ -1,0 +1,19 @@
+{
+  "name": "otus-homework-9",
+  "version": "1.0.0",
+  "description": "Game of Life",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parkers12/otus-homework-9.git"
+  },
+  "author": "Parker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parkers12/otus-homework-9/issues"
+  },
+  "homepage": "https://github.com/parkers12/otus-homework-9#readme"
+}
