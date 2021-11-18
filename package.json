@@ -20,6 +20,11 @@
   "bugs": {
     "url": "https://github.com/parkers12/otus-homework-9/issues"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test && lint-staged"
+    }
+  },
   "homepage": "https://github.com/parkers12/otus-homework-9#readme",
   "devDependencies": {
     "@babel/core": "^7.16.0",
