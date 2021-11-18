@@ -11,6 +11,9 @@ module.exports = {
     filename: "./js/bundle.js",
     path: path.resolve(__dirname, "build"),
     clean: true,
+    environment: {
+      arrowFunction: false,
+    },
   },
   mode: process.env.NODE_ENV === "development" ? "development" : "production",
   plugins: [
