@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/parkers12/otus-homework-9/issues"
   },
-  "homepage": "https://github.com/parkers12/otus-homework-9#readme"
+  "homepage": "https://github.com/parkers12/otus-homework-9#readme",
+  "devDependencies": {
+    "webpack": "^5.64.1",
+    "webpack-cli": "^4.9.1"
+  }
 }
