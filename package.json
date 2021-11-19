@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --coverage",
     "lint": "eslint . --ext .js, .ts && prettier --check .",
-    "lint:fix": "eslint . --fix --ext .js, .ts && prettier --write .",
+    "lint:fix": "eslint . --fix --ext .js,.ts && prettier --write .",
     "prepare": "husky install",
     "dev": "webpack serve --node-env development",
     "build": "webpack --node-env production"
@@ -59,7 +59,7 @@
   "lint-staged": {
     "*.js": [
       "prettier --write",
-      "eslint --fix --ext .js, .ts"
+      "eslint --fix --ext .js,.ts"
     ],
     "*.{css,md,json}": "prettier --write"
   }
