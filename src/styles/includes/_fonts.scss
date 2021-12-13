@@ -1,0 +1,59 @@
+/* Fonts */
+
+@mixin font-face(
+  $font-family,
+  $font,
+  $path-fonts,
+  $weight: normal,
+  $style: normal
+) {
+  @font-face {
+    font-family: $font-family;
+    font-weight: $weight;
+    font-style: $style;
+    src: local("#{$font}"),
+      url("#{$path-fonts}/#{$font-family}/#{$font}.woff") format("woff"),
+      url("#{$path-fonts}/#{$font-family}/#{$font}.ttf") format("truetype"),
+      url("#{$path-fonts}/#{$font-family}/#{$font}.eot?#iefix")
+        format("embedded-opentype");
+  }
+}
+
+@include font-face($font-family, "Roboto-Thin", $path-fonts, 100, normal);
+@include font-face($font-family, "Roboto-ThinItalic", $path-fonts, 100, italic);
+@include font-face($font-family, "Roboto-Light", $path-fonts, 300, normal);
+@include font-face(
+  $font-family,
+  "Roboto-LightItalic",
+  $path-fonts,
+  300,
+  italic
+);
+@include font-face($font-family, "Roboto-Regular", $path-fonts, normal, normal);
+@include font-face($font-family, "Roboto-Italic", $path-fonts, normal, italic);
+@include font-face($font-family, "Roboto-Medium", $path-fonts, 500, normal);
+@include font-face(
+  $font-family,
+  "Roboto-MediumItalic",
+  $path-fonts,
+  500,
+  italic
+);
+@include font-face($font-family, "Roboto-Bold", $path-fonts, bold, normal);
+@include font-face(
+  $font-family,
+  "Roboto-BoldItalic",
+  $path-fonts,
+  bold,
+  italic
+);
+@include font-face($font-family, "Roboto-Black", $path-fonts, 900, normal);
+@include font-face(
+  $font-family,
+  "Roboto-BlackItalic",
+  $path-fonts,
+  900,
+  italic
+);
+
+/* /Fonts */

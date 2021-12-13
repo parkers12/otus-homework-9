@@ -1,0 +1,116 @@
+.main {}
+
+.wrapper {
+    width: $xl;
+    margin: 0 auto;
+}
+
+.table {
+    border: 0.4rem solid darken($white, 5%);
+}
+
+.table,
+.form {
+    margin-bottom: $sp * 5;
+}
+
+.row,
+.cell {
+    &:not(&:last-child) {
+        border: 0.2rem solid $white;
+    }
+}
+
+.cell {
+    width: $sp * 6;
+    height: $sp * 6;
+    cursor: pointer;
+    background-color: darken($white, 1%);
+    transition: $transition;
+
+    &:hover {
+        background-color: darken($white, 5%);
+    }
+
+    &.cell {
+        &_alive,
+        &_born,
+        &_die {
+            // cursor: not-allowed;
+        }
+    
+        &_alive,
+        &_alive-die {
+            background-color: rgba($green, 0.7);
+    
+            &:hover {
+                background-color: $green;
+            }
+        }
+    
+        &_alive-die {
+            position: relative;
+    
+            &:after {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 0;
+                border: $sp solid transparent;
+                border-top: $sp solid rgba($red, 0.7);
+                border-right: $sp solid rgba($red, 0.7);
+            }
+    
+            &:hover:after {
+                border-top: $sp solid $red;
+                border-right: $sp solid $red;
+            }
+        }
+    
+        &_born {
+            background-color: rgba($green, 0.1);
+    
+            &:hover {
+                background-color: rgba($green, 0.1);
+            }
+        }
+    
+        &_die {
+            background-color: rgba($red, 0.1);
+    
+            &:hover {
+                background-color: rgba($red, 0.1);
+            }
+        }
+    }
+}
+
+.form {
+    @include flex-end;
+}
+
+.button,
+.form-item {
+    & + & {
+        margin-left: $sp * 10;
+    }
+}
+
+.form-item {
+    @include flex-column;
+}
+
+.label {
+    font-size: $font-size-main;
+    line-height: $line-height;
+    color: $blue;
+    margin-bottom: $sp;
+}
+
+.input {
+    &[type="number"] {
+        width: $sp * 30;
+    }
+}
+
+.button {}

@@ -1,0 +1,54 @@
+/* Variables */
+
+$sp: 4px;
+
+/* Font */
+$path-fonts: "../fonts";
+$font-family: "Roboto";
+$fallback-font: "sans-serif";
+
+/* Font size */
+$font-size-base: 10px;
+$font-size-main: $font-size-base * 1.6;
+$font-size-second: $font-size-base * 1.4;
+
+/* Font style */
+$font-weight-light: 300;
+$font-weight-middle: 500;
+$line-height: 150%;
+$letter-spacing: 0.06rem;
+$text-align: center;
+
+/* Colors */
+$white: #ffffff;
+$black: #000000;
+$red: #c9453b;
+$green: #269499;
+$blue: #009fff;
+
+/* Border radius for picture */
+$border-radius: 4px;
+
+/* Img path */
+$path-img: "../img";
+$path-img-socials: "#{$path-img}/socials";
+
+/* Transition */
+$transition: all 0.2s;
+
+/* List social */
+$socials: facebook, instagram, twitter, google;
+
+/* Opacity */
+$opacity-middle: 0.6;
+
+/* Width content for desctop version */
+$width-content: 60rem;
+
+/* Breakpoints */
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1140px;
+
+/* /Variables */
