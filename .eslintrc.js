@@ -12,6 +12,14 @@ module.exports = {
   },
   plugins: ["jest", "@typescript-eslint"],
   rules: {
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        ts: "never",
+        js: "never",
+      },
+    ],
     "max-len": [
       "error",
       {
@@ -19,5 +27,12 @@ module.exports = {
       },
     ],
     "import/prefer-default-export": "off",
+  },
+  settings: {
+    "import/resolver": {
+      node: {
+        extensions: [".ts", ".js"],
+      },
+    },
   },
 };

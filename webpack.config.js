@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
@@ -14,6 +15,7 @@ module.exports = {
     environment: {
       arrowFunction: false,
     },
+    assetModuleFilename: "fonts/Roboto/[name][ext]",
   },
   mode: process.env.NODE_ENV === "development" ? "development" : "production",
   plugins: [
@@ -33,6 +35,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "./styles/styles.css",
     }),
+    new CopyPlugin({
+      patterns: [{ from: "src/fonts", to: "fonts" }],
+    }),
     new CleanWebpackPlugin(),
   ],
   module: {
@@ -48,8 +53,42 @@ module.exports = {
         },
       },
       {
-        test: /\.s[ac]ss$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              sourceMap: true,
+              postcssOptions: {
+                plugins: [
+                  [
+                    "postcss-preset-env",
+                    "autoprefixer",
+                    "cssmqpacker",
+                    "cssnano",
+                  ],
+                ],
+              },
+            },
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(eot|ttf|woff)$/,
+        type: "asset/resource",
       },
     ],
   },
