@@ -4,8 +4,9 @@ export function getMarkupTable(
   arrayAlive: number[][],
   table: HTMLTableElement
 ): void {
+  // eslint-disable-next-line no-param-reassign
   table.innerHTML = "";
-  const classes = `${config.classActive} ${config.classCellActive}`.split(" ");
+  const classes = `${config.classCell} ${config.classCellActive}`.split(" ");
   for(let i = 0; i < arrayAlive.length; i += 1) {
       const tr: HTMLElement = document.createElement("tr");  
       table.appendChild(tr).setAttribute("class", "row");
@@ -138,8 +139,6 @@ export function getUpdateArray(
     return sum;
   }
 
-  // let arrayAliveNew: number[][] = [];
-  // arrayAliveNew = arrayAlive.slice();
   const arrayAliveNew: number[][] = getAliveList(row, col);
 
   function setConditionCell(
@@ -148,8 +147,6 @@ export function getUpdateArray(
     row: number,
     col: number
   ): number[][] {
-    // console.log(arrayCounters);
-    // console.log(arrayAlive);
     for (let i = 0; i < row; i += 1) {
       for (let j = 0; j < col; j += 1) {
         // console.log(arrayCounters[i][j]);
@@ -167,31 +164,14 @@ export function getUpdateArray(
         }
       }
     }
-    // console.log(arrayAliveNew)
     return arrayAliveNew;
-
-    // const cell: number = array[row][col];
-    // if(cell === 0) {
-    //   if(counterAliveAround === 3) {
-    //     arrayAliveNew[row][col] = 1;
-    //     // getToggleClass([row, col]);
-    //   }
-    // } else if(cell === 1){
-    //   if(counterAliveAround < 2 || counterAliveAround > 3) {
-    //     arrayAliveNew[row][col] = 0;
-    //     // getToggleClass([row, col]);
-    //   }
-    // }
   }
 
-  // let counterAliveAround: number = 0;
   const counterAliveAround: number[][] = getAliveList(row, col);
 
   for (let i = 0; i < row; i += 1) {
     for (let j = 0; j < col; j += 1) {
       counterAliveAround[i][j] = counterAroundCell(arrayAlive, i, j);
-      // console.log(counterAliveAround[i][j]);
-      // setConditionCell(arrayAlive, counterAliveAround, i, j);
     }
   }
 
@@ -227,7 +207,6 @@ export function getChangeTable(
   newValue: number,
   isRow: boolean
 ): number[][] {
-  console.log(row, col, newValue, isRow);
   if(isRow) {
     if(row > newValue) {
       arrayAlive.splice(-1);
