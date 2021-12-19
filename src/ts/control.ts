@@ -1,4 +1,9 @@
 import config from "./config";
+import {
+  getAliveList,
+  counterAroundCell,
+  setConditionCell
+} from "./extraFunctions";
 
 export function getMarkupTable(
   arrayAlive: number[][],
@@ -20,17 +25,6 @@ export function getMarkupTable(
           }
       }
   }
-}
-
-export function getAliveList(row: number, col: number): number[][] {
-  const aliveListEmpty: number[][] = [];
-  for (let i = 0; i < row; i += 1) {
-    aliveListEmpty[i] = [];
-    for (let j = 0; j < col; j += 1) {
-      aliveListEmpty[i][j] = 0;
-    }
-  }
-  return aliveListEmpty;
 }
 
 export function getPosClick(event: any): number[] {
@@ -94,87 +88,12 @@ export function getUpdateArray(
   row: number,
   col: number
 ): number[][]  {
-  function counterAroundCell(
-    aliveCell: number[][],
-    rowCurent: number,
-    colCurent: number
-  ): number {
-    let sum: number = 0;
-    let rowStart: number;
-    let rowFinish: number;
-    let colStart: number;
-    let colFinish: number;
-
-    if(rowCurent - 1 < 0) {
-      rowStart = 0;
-    } else {
-      rowStart = rowCurent - 1;
-    }
-
-    if(rowCurent + 1 >= config.fields[0].value) {
-      rowFinish = config.fields[0].value - 1;
-    } else {
-      rowFinish = rowCurent + 1;
-    }
-
-    if(colCurent - 1 < 0) {
-      colStart = 0;
-    } else {
-      colStart = colCurent - 1;
-    }
-
-    if(colCurent + 1 >= config.fields[1].value) {
-      colFinish = config.fields[1].value - 1;
-    } else {
-      colFinish = colCurent + 1;
-    }
-
-    for(let i = rowStart; i <= rowFinish; i += 1) {
-      for(let j = colStart; j <= colFinish; j += 1) {
-        if(i !== rowCurent || j !== colCurent) {
-          sum += aliveCell[i][j];
-        }
-      }
-    }
-    return sum;
-  }
-
-  const arrayAliveNew: number[][] = getAliveList(row, col);
-
-  function setConditionCell(
-    arrayCounters: number[][],
-    arrayAlive: number[][],
-    row: number,
-    col: number
-  ): number[][] {
-    for (let i = 0; i < row; i += 1) {
-      for (let j = 0; j < col; j += 1) {
-        // console.log(arrayCounters[i][j]);
-        if(arrayAlive[i][j] === 1) {
-          if(arrayCounters[i][j] < 2 ||
-            arrayCounters[i][j] > 3) {
-            arrayAliveNew[i][j] = 0;
-          } else {
-            arrayAliveNew[i][j] = 1;
-          }
-        } else {
-          if(arrayCounters[i][j] === 3) {
-            arrayAliveNew[i][j] = 1;
-          }
-        }
-      }
-    }
-    return arrayAliveNew;
-  }
-
   const counterAliveAround: number[][] = getAliveList(row, col);
-
   for (let i = 0; i < row; i += 1) {
     for (let j = 0; j < col; j += 1) {
       counterAliveAround[i][j] = counterAroundCell(arrayAlive, i, j);
     }
   }
-
   return setConditionCell(counterAliveAround, arrayAlive, row, col);
 }
 

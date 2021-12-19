@@ -1,6 +1,7 @@
 import config from "./config";
 import markup from "./markup";
-import { getMarkupTable, getAliveList } from "./control";
+import { getAliveList } from "./extraFunctions";
+import { getMarkupTable } from "./control";
 
 describe("markup", () => {
     document.body.innerHTML = `<div class="app" id="app"></div>`;

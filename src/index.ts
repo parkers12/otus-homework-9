@@ -1,14 +1,11 @@
 import "./styles/styles.scss";
-
 import config from "./ts/config";
-
 import markup from "./ts/markup";
-import
-{
+import { getAliveList } from "./ts/extraFunctions";
+import {
     getMarkupTable,
     getCountAliveCells,
     handleButton,
-    getAliveList,
     getPosClick,
     getNewAliveList,
     getToggleClass,

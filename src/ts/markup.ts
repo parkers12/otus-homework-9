@@ -1,5 +1,6 @@
 import config from "./config";
-import { getMarkupTable, getAliveList } from "./control";
+import { getAliveList } from "./extraFunctions";
+import { getMarkupTable } from "./control";
 
 function markup(elem: HTMLElement): void {
     const wrapper: HTMLElement = document.createElement("div");
