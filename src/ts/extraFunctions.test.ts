@@ -111,6 +111,30 @@ describe("counterAroundCell", () => {
         const sum: number = counterAroundCell(a1, 2, 1);
         expect(sum).toEqual(5);
     });
+
+    test("Count the number of living neighbors in cell 4, 1", () => {
+        const a1 = [
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [1, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0]
+        ];
+        const sum: number = counterAroundCell(a1, 4, 1);
+        expect(sum).toEqual(2);
+    });
+
+    test("Count the number of living neighbors in cell 1, 4", () => {
+        const a1 = [
+            [0, 0, 0, 0, 1],
+            [0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 1],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
+        ];
+        const sum: number = counterAroundCell(a1, 1, 4);
+        expect(sum).toEqual(3);
+    });
 });
 
 describe("setConditionCell", () => {

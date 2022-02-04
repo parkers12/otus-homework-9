@@ -65,7 +65,8 @@ const config = {
     ],
     classCell: "cell",
     classCellActive: "cell_alive",
-    interval: 1000
+    interval: 1000,
+    message: "message"
 };
 
 export default config;

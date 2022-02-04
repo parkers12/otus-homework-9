@@ -44,7 +44,7 @@ function startApp() {
     let aliveCell: number[][] = [];
 
     function handlerTableClick(event: Event): number[][] {
-        const coords: number[] = getPosClick(event);
+        const coords: string[] = getPosClick(event);
         getToggleClass(coords);
         const numberAlive: number = getCountAliveCells(table);
         handleButton(numberAlive, buttonClear);
@@ -108,6 +108,7 @@ function startApp() {
             aliveCell = getChangeTable(
                 arrayAlive, rowActual, colActual, dataRows, true
             );
+            console.log(aliveCell);
             getMarkupTable(aliveCell, table);
         } else if(element === "colField") {
             const dataCols = Number(colField.value);

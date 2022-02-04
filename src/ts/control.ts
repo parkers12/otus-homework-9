@@ -9,17 +9,19 @@ export function getMarkupTable(
   arrayAlive: number[][],
   table: HTMLTableElement
 ): void {
-  // eslint-disable-next-line no-param-reassign
   table.innerHTML = "";
   const classes = `${config.classCell} ${config.classCellActive}`.split(" ");
+  
   for(let i = 0; i < arrayAlive.length; i += 1) {
       const tr: HTMLElement = document.createElement("tr");  
       table.appendChild(tr).setAttribute("class", "row");
       for(let j = 0; j < arrayAlive[i].length; j += 1) {
           const td: HTMLElement = document.createElement("td");
           tr.appendChild(td).setAttribute("class", "cell");
-          td.setAttribute("data-id-row", `${i}`);
-          td.setAttribute("data-id-col", `${j}`);
+          // td.setAttribute("data-row", `${i}`);
+          // td.setAttribute("data-col", `${j}`);
+          td.dataset.row = `${i}`;  // test
+          td.dataset.col = `${j}`;  // test
           if(arrayAlive[i][j] === 1) {
             td.classList.add(...classes);
           }
@@ -27,23 +29,29 @@ export function getMarkupTable(
   }
 }
 
-export function getPosClick(event: any): number[] {
-  const coordY: number =
-    event.target.getAttribute("data-id-row");
-  const coordX: number =
-    event.target.getAttribute("data-id-col");
+export function getPosClick(event: Event): string[] {
+  // console.log(event);
+  // const coordY: string =
+  //   (event.target  as HTMLElement).getAttribute("data-id-row") as string;
+  // const coordX: string | null =
+  //   (event.target  as HTMLElement).getAttribute("data-id-col") as string;
+  const cell = event.target as HTMLTableCellElement;
+  const coordY = cell.dataset.row as string;
+  const coordX = cell.dataset.col as string;
   return [coordY, coordX];
 }
 
-export function getToggleClass(coords: number[]): void {
+export function getToggleClass(coords: string[]): void {
+  const coordsY = Number(coords[0]);
+  const coordsX = Number(coords[1]);
   const cell = document.querySelectorAll(
-    `td[data-id-row='${coords[0]}'][data-id-col='${coords[1]}']`
+    `td[data-row='${coordsY}'][data-col='${coordsX}']`
   );
   cell[0].classList.toggle(config.classCellActive);
 }
 
 export function getNewAliveList(
-    array: number[][], coordNew: number[]
+    array: number[][], coordNew: string[]
   ): number[][] {
 
   const row: number = Number(coordNew[0]);
@@ -72,13 +80,12 @@ export function getCountAliveCells(table: HTMLElement): number {
 
 export function handleButton(
   numberAlive: number,
-  button: HTMLButtonElement
+  btn: HTMLButtonElement
 ): void {
+  const button = btn;
   if(numberAlive <= 0) {
-    // eslint-disable-next-line no-param-reassign
     button.disabled = true;
   } else {
-    // eslint-disable-next-line no-param-reassign
     button.disabled = false;
   }
 }
@@ -105,7 +112,7 @@ export function getUpdateTable(
   for (let i = 0; i < row; i += 1) {
     for (let j = 0; j < col; j += 1) {
       const cell = document.querySelectorAll(
-        `td[data-id-row='${i}'][data-id-col='${j}']`
+        `td[data-row='${i}'][data-col='${j}']`
       );
       cell[0].classList.remove(config.classCellActive);
       if(arrayAlive[i][j] === 1) {
@@ -115,8 +122,12 @@ export function getUpdateTable(
   }
 }
 
-export function toEqualArr(a1: number[][], a2: number[][]):boolean {
-  return a1.every((v,i) => a1[i].every((v,j) => v === a2[i][j]));
+export function toEqualArr(array1: number[][], array2: number[][]):boolean {
+  return array1.every(
+    (value1,i) => array1[i].every(
+      (value2,j) => value2 === array2[i][j]
+    )
+  );
 }
 
 export function getChangeTable(

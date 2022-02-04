@@ -16,6 +16,7 @@ export function counterAroundCell(
     rowCurent: number,
     colCurent: number
   ): number {
+    
     let sum: number = 0;
     let rowStart: number;
     let rowFinish: number;
@@ -49,7 +50,7 @@ export function counterAroundCell(
     for(let i = rowStart; i <= rowFinish; i += 1) {
       for(let j = colStart; j <= colFinish; j += 1) {
         if(i !== rowCurent || j !== colCurent) {
-          sum += aliveCell[i][j];
+          sum += Number(aliveCell[i][j]);
         }
       }
     }
@@ -72,11 +73,8 @@ export function setConditionCell(
           } else {
             arrayAliveNew[i][j] = 1;
           }
-        } else {
-          // eslint-disable-next-line no-lonely-if
-          if(arrayCounters[i][j] === 3) {
-            arrayAliveNew[i][j] = 1;
-          }
+        } else if (arrayCounters[i][j] === 3) {
+          arrayAliveNew[i][j] = 1;
         }
       }
     }

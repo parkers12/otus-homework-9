@@ -2,6 +2,16 @@ import config from "./config";
 import markup from "./markup";
 import { getAliveList } from "./extraFunctions";
 import { getMarkupTable } from "./control";
+// import { errorMessage } from "./errorMessage";
+
+jest.mock("./errorMessage", () => {
+    const originalModule = jest.requireActual("./errorMessage");
+    return {
+      __esModule: true,
+      ...originalModule,
+      errorMessage: jest.fn()
+    };
+});
 
 describe("markup", () => {
     document.body.innerHTML = `<div class="app" id="app"></div>`;
@@ -29,9 +39,9 @@ describe("markup", () => {
             const cellArray =
                 rowArray[Number(rowTest)].querySelectorAll(`td`);
             const row =
-                cellArray[Number(colTest)].getAttribute("data-id-row");
+                cellArray[Number(colTest)].getAttribute("data-row");
             const cell =
-                cellArray[Number(colTest)].getAttribute("data-id-col");
+                cellArray[Number(colTest)].getAttribute("data-col");
             expect(row).toBe(rowTest);
             expect(cell).toBe(colTest);
         });
@@ -62,6 +72,20 @@ describe("markup", () => {
             expect(buttonStart[0] !== null).toBe(true);
             expect(buttonStop[0] !== null).toBe(true);
             expect(buttonClear[0] !== null).toBe(true);
+        });
+    });
+
+    describe("Test errors", () => {
+        test("Missing data in config", () => {
+            // expect(errorMessage).toHaveBeenCalled();
+        });
+
+        test("Missing data in config", () => {
+            // expect(errorMessage).toHaveBeenCalled();
+        });
+
+        test("Missing data in config", () => {
+            // expect(errorMessage).toHaveBeenCalled();
         });
     });
 });

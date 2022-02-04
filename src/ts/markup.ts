@@ -1,6 +1,7 @@
 import config from "./config";
 import { getAliveList } from "./extraFunctions";
 import { getMarkupTable } from "./control";
+import { errorMessage } from "./errorMessage";
 
 function markup(elem: HTMLElement): void {
     const wrapper: HTMLElement = document.createElement("div");
@@ -70,7 +71,7 @@ function markup(elem: HTMLElement): void {
             }
         }
     } else {
-        console.log("Error: missing elements input");
+        errorMessage("Error: missing elements input");
     }
 
     if(config.fields[0].value > 2 || config.fields[1].value > 2) {
@@ -84,7 +85,7 @@ function markup(elem: HTMLElement): void {
             getAliveList(config.fields[0].value, config.fields[1].value);
         getMarkupTable(aliveList, table);
     } else {
-        console.log("Error: small input values");
+        errorMessage("Error: small input values");
     }
 
     if(countFilds > 0) {
@@ -104,7 +105,7 @@ function markup(elem: HTMLElement): void {
             button.innerHTML = config.button[i].text;
         }
     } else {
-        console.log("Error: small input values");
+        errorMessage("Error: small input values");
     }
 }
 
