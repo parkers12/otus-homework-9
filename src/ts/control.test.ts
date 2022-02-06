@@ -1,10 +1,4 @@
 import config from "./config";
-import markup from "./markup";
-import {
-    getAliveList,
-    counterAroundCell,
-    setConditionCell
-} from "./extraFunctions";
 import {
     getMarkupTable,
     getPosClick,
@@ -141,7 +135,8 @@ describe("Test functions", () => {
         </div>
     `;
 
-    const table = document.getElementById("table") as HTMLTableElement;
+    const table =
+        document.getElementById(config.classTable) as HTMLTableElement;
 
     describe("Changing the table", () => {
         const arrayAlive = [
@@ -279,7 +274,7 @@ describe("Test functions", () => {
                 const cellAfter = table.querySelectorAll(
                     `td[data-row='${rowNum}'][data-col='${colNum}']`
                 );
-                const classes = cellAfter[0].getAttribute("class").split(" ");
+                const classes = cellAfter[0].getAttribute("class")!.split(" ");
                 expect(classes[0]).toEqual(`${config.classCell}`);
                 expect(classes[1]).toEqual(`${config.classCellActive}`);
             });

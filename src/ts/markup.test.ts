@@ -18,7 +18,8 @@ describe("markup", () => {
     const app = document.getElementById("app") as HTMLElement;
     markup(app);
 
-    const table = document.getElementById("table") as HTMLTableElement;
+    const table =
+        document.getElementById(config.classTable) as HTMLTableElement;
 
     test("Table presence on the page", () => {
         expect(table !== null).toBe(true);
@@ -77,11 +78,22 @@ describe("markup", () => {
 
     describe("Test errors", () => {
         test("Missing data in config", () => {
-            // expect(errorMessage).toHaveBeenCalled();
-        });
+            // jest.doMock("./config", () => {
+            //     const originalModule = jest.requireActual("./config");
+            //     return {
+            //         __esModule: true,
+            //         ...originalModule,
+            //         default: {
+            //             fields: []
+            //         }
+            //     } 
+            // });
 
-        test("Missing data in config", () => {
+            // const configMock = require("./config");
+            // configMock.fields = [];
+            
             // expect(errorMessage).toHaveBeenCalled();
+            
         });
 
         test("Missing data in config", () => {

@@ -63,6 +63,8 @@ const config = {
             disabled: true
         }
     ],
+    classTable: "table",
+    classForm: "form",
     classCell: "cell",
     classCellActive: "cell_alive",
     interval: 1000,

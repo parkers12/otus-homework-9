@@ -4,7 +4,7 @@ import { getMarkupTable } from "./control";
 import { errorMessage } from "./errorMessage";
 
 function markup(elem: HTMLElement): void {
-    const wrapper: HTMLElement = document.createElement("div");
+    const wrapper = document.createElement("div") as HTMLDivElement;
     elem.appendChild(wrapper).setAttribute("class", "wrapper");
     const content: HTMLElement|null = document.querySelector(".wrapper")!;
 
@@ -22,7 +22,6 @@ function markup(elem: HTMLElement): void {
     elem.appendChild(footer).setAttribute("class", "footer");
 
     const countFilds = config.fields.length;
-
     const form: HTMLElement = document.createElement("div");
     main.appendChild(form).setAttribute("class", "form");
     form.setAttribute("id", "form");
@@ -75,9 +74,10 @@ function markup(elem: HTMLElement): void {
     }
 
     if(config.fields[0].value > 2 || config.fields[1].value > 2) {
-        const table: HTMLTableElement = document.createElement("table");
-        main.appendChild(table).setAttribute("class", "table");
-        table.setAttribute("id", "table");
+        const table =
+            document.createElement(config.classTable) as HTMLTableElement;
+        main.appendChild(table).setAttribute("class", config.classTable);
+        table.setAttribute("id", config.classTable);
         table.setAttribute("border", "0");
         table.setAttribute("cellpadding", "0");
         table.setAttribute("cellspacing", "0");

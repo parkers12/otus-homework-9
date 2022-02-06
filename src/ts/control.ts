@@ -7,8 +7,9 @@ import {
 
 export function getMarkupTable(
   arrayAlive: number[][],
-  table: HTMLTableElement
+  tbl: HTMLTableElement
 ): void {
+  const table = tbl;
   table.innerHTML = "";
   const classes = `${config.classCell} ${config.classCellActive}`.split(" ");
   
@@ -18,10 +19,8 @@ export function getMarkupTable(
       for(let j = 0; j < arrayAlive[i].length; j += 1) {
           const td: HTMLElement = document.createElement("td");
           tr.appendChild(td).setAttribute("class", "cell");
-          // td.setAttribute("data-row", `${i}`);
-          // td.setAttribute("data-col", `${j}`);
-          td.dataset.row = `${i}`;  // test
-          td.dataset.col = `${j}`;  // test
+          td.dataset.row = `${i}`;
+          td.dataset.col = `${j}`;
           if(arrayAlive[i][j] === 1) {
             td.classList.add(...classes);
           }
@@ -30,11 +29,6 @@ export function getMarkupTable(
 }
 
 export function getPosClick(event: Event): string[] {
-  // console.log(event);
-  // const coordY: string =
-  //   (event.target  as HTMLElement).getAttribute("data-id-row") as string;
-  // const coordX: string | null =
-  //   (event.target  as HTMLElement).getAttribute("data-id-col") as string;
   const cell = event.target as HTMLTableCellElement;
   const coordY = cell.dataset.row as string;
   const coordX = cell.dataset.col as string;
