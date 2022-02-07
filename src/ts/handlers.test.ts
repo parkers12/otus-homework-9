@@ -1,5 +1,5 @@
 import config from "./config";
-
+import App from "./handlers";
 import {
     handlerTableClick,
     getStart,
@@ -8,58 +8,20 @@ import {
     getEditField
 } from "./main";
 
-import { getAliveList } from "./extraFunctions";
-
-import {
-    getMarkupTable,
-    getCountAliveCells,
-    handleButton,
-    getPosClick,
-    getNewAliveList,
-    getToggleClass,
-    clearTable,
-    getUpdateArray,
-    getUpdateTable,
-    toEqualArr,
-    getChangeTable,
-    getActualTable,
-    getInterval
-} from "./control";
-
-jest.useFakeTimers();
-
-jest.mock("./control", () => {
-    const originalModule = jest.requireActual("./control");
+jest.mock("./main", () => {
+    const originalModule = jest.requireActual("./main");
     return {
-      __esModule: true,
-      ...originalModule,
-      getPosClick: jest.fn(),
-      getToggleClass: jest.fn(),
-      getCountAliveCells: jest.fn(),
-      handleButton: jest.fn(),
-      getNewAliveList: jest.fn(),
-      getInterval: jest.fn(),
-      getUpdateArray: jest.fn(),
-      getUpdateTable: jest.fn(),
-      toEqualArr: jest.fn(),
-      getAliveList: jest.fn(),
-      clearTable: jest.fn(),
-      getActualTable: jest.fn(),
-      getChangeTable: jest.fn(),
-      getMarkupTable: jest.fn(),
+        __esModule: true,
+        ...originalModule,
+        handlerTableClick: jest.fn(),
+        getStart: jest.fn(),
+        getStop: jest.fn(),
+        getClear: jest.fn(),
+        getEditField: jest.fn(),
     };
 });
 
-jest.mock("./extraFunctions", () => {
-    const originalModule = jest.requireActual("./extraFunctions");
-    return {
-      __esModule: true,
-      ...originalModule,
-      getAliveList: jest.fn(),
-    };
-});
-
-describe("Test handlers", () => {
+describe("Handlers application", () => {
     document.body.innerHTML = `
         <div class="app" id="app">
             <main class="main" id="main">
@@ -178,8 +140,6 @@ describe("Test handlers", () => {
             </main>
         </div>
     `;
-    const row: number = config.fields[0].value;
-    const col: number = config.fields[1].value;
 
     const table =
         document.getElementById(`${config.classTable}`) as HTMLTableElement;
@@ -189,175 +149,36 @@ describe("Test handlers", () => {
         document.getElementById(`${config.button[1].id}`) as HTMLButtonElement;
     const buttonClear =
         document.getElementById(`${config.button[2].id}`) as HTMLButtonElement;
-    const rowField =
-        document.getElementById(`${config.fields[0].id}`) as HTMLInputElement;
-    const colField =
-        document.getElementById(`${config.fields[1].id}`) as HTMLInputElement;
     const rangeField =
         document.getElementById(`${config.fields[2].id}`) as HTMLInputElement;
 
-    const aliveList = [
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0]
-    ];
-
-    test("Click on a cell table", () => {
-        const mEvent: any = {
-            target: {
-                dataset: {
-                    row: 0,
-                    col: 4
-                }
-            },
-        } as unknown as Event;
-
-        handlerTableClick(
-            mEvent,
-            table,
-            buttonStart,
-            buttonClear,
-            aliveList
-        );
-        expect(getPosClick).toHaveBeenCalled();
-        expect(getToggleClass).toHaveBeenCalled();
-        expect(getCountAliveCells).toHaveBeenCalled();
-        expect(handleButton).toHaveBeenCalled();
-        expect(getNewAliveList).toHaveBeenCalled();
+    test("handlerTableClick", () => {
+        table.click();
+        App();
+        // expect(handlerTableClick).toHaveBeenCalled();
     });
 
-    test("Click on a start button", () => {
-        const aliveListNew = [
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]
-        ];
+    // test("getStart", () => {
+    //     buttonStart.click();
+    //     App();
+    //     expect(getStart).toHaveBeenCalled();
+    // });
 
-        getInterval.mockImplementation(() => 1);
+    // test("getStop", () => {
+    //     buttonStop.click();
+    //     App();
+    //     expect(getStop).toHaveBeenCalled();
+    // });
 
-        getUpdateArray.mockImplementation(() => [
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]
-        ]);
+    // test("getClear", () => {
+    //     buttonClear.click();
+    //     App();
+    //     expect(getClear).toHaveBeenCalled();
+    // });
 
-        toEqualArr.mockImplementation(() => 1);
-
-        getCountAliveCells.mockImplementation(() => 0);
-
-        jest.runOnlyPendingTimers();
-        
-        getStart(
-            aliveListNew,
-            table,
-            rangeField,
-            buttonStop,
-            buttonStart,
-            buttonClear,
-            row,
-            col
-        );
-
-        expect(getCountAliveCells).toHaveBeenCalled();
-        expect(handleButton).toHaveBeenCalled();
-        // expect(getInterval).toHaveBeenCalled();
-        // expect(getUpdateArray).toHaveBeenCalled();
-        // expect(getUpdateTable).toHaveBeenCalled();
-        // expect(toEqualArr).toHaveBeenCalled();
-        
-    });
-
-    test("Click on a stop button", () => {
-        getStop(
-            table,
-            buttonStop,
-            buttonStart,
-            buttonClear
-        );
-        expect(getCountAliveCells).toHaveBeenCalled();
-        expect(handleButton).toHaveBeenCalled();
-    });
-
-    test("Click on a clear button", () => {
-        getClear(
-            table,
-            buttonStart,
-            buttonClear,
-            row,
-            col
-        );
-        expect(clearTable).toHaveBeenCalled();
-        expect(getCountAliveCells).toHaveBeenCalled();
-        expect(handleButton).toHaveBeenCalled();
-        expect(getAliveList).toHaveBeenCalled();
-    });
-
-    test("Click on a row field", () => {
-        const mEvent: any = {
-            target: {
-                getAttribute: jest.fn()
-                    .mockReturnValueOnce(config.fields[0].id),
-            },
-        } as unknown as Event;
-        
-        getActualTable.mockImplementation(() => [5, 5]);
-        getChangeTable.mockImplementation(() => [
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]
-        ]);
-
-        rowField.value = '6';
-
-        getEditField(
-            mEvent,
-            aliveList,
-            table,
-            rowField,
-            colField
-        );
-        expect(getActualTable).toHaveBeenCalled();
-        expect(getChangeTable).toHaveBeenCalled();
-        expect(getMarkupTable).toHaveBeenCalled();
-    });
-
-    test("Click on a col field", () => {
-        const mEvent: any = {
-            target: {
-                getAttribute: jest.fn()
-                    .mockReturnValueOnce(config.fields[1].id),
-            },
-        } as unknown as Event;
-
-        getActualTable.mockImplementation(() => [5, 5]);
-        getChangeTable.mockImplementation(() => [
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0]
-        ]);
-
-        colField.value = '6';
-
-        getEditField(
-            mEvent,
-            aliveList,
-            table,
-            rowField,
-            colField
-        );
-        expect(getActualTable).toHaveBeenCalled();
-        expect(getChangeTable).toHaveBeenCalled();
-        expect(getMarkupTable).toHaveBeenCalled();
-    });
+    // test("getEditField", () => {
+    //     rangeField.click();
+    //     App();
+    //     expect(getEditField).toHaveBeenCalled();
+    // });
 });

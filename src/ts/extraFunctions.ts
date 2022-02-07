@@ -58,25 +58,25 @@ export function counterAroundCell(
 }
 
 export function setConditionCell(
-    arrayCounters: number[][],
-    arrayAlive: number[][],
-    row: number,
-    col: number
-  ): number[][] {
-    const arrayAliveNew: number[][] = getAliveList(row, col);
-    for (let i = 0; i < row; i += 1) {
-      for (let j = 0; j < col; j += 1) {
-        if(arrayAlive[i][j] === 1) {
-          if(arrayCounters[i][j] < 2 ||
-            arrayCounters[i][j] > 3) {
-            arrayAliveNew[i][j] = 0;
-          } else {
-            arrayAliveNew[i][j] = 1;
-          }
-        } else if (arrayCounters[i][j] === 3) {
+  arrayCounters: number[][],
+  arrayAlive: number[][],
+  row: number,
+  col: number
+): number[][] {
+  const arrayAliveNew: number[][] = getAliveList(row, col);
+  for (let i = 0; i < row; i += 1) {
+    for (let j = 0; j < col; j += 1) {
+      if(arrayAlive[i][j] === 1) {
+        if(arrayCounters[i][j] < 2 ||
+          arrayCounters[i][j] > 3) {
+          arrayAliveNew[i][j] = 0;
+        } else {
           arrayAliveNew[i][j] = 1;
         }
+      } else if (arrayCounters[i][j] === 3) {
+        arrayAliveNew[i][j] = 1;
       }
     }
-    return arrayAliveNew;
   }
+  return arrayAliveNew;
+}

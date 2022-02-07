@@ -61,6 +61,7 @@ export function getStart(
     col: number
 ): void {
     function tick(arr: number[][]): void {
+        
         const newInterval: number = getInterval(rangeField);
         let timeInterval: number;
 
@@ -88,6 +89,7 @@ export function getStart(
     handleButton(numberAlive, buttonStop);
     handleButton(0, buttonClear);
     handleButton(0, buttonStart);
+    debugger
     setTimeout(tick, interval, arrayAlive);
 }
 
