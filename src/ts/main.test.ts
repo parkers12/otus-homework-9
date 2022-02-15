@@ -5,7 +5,8 @@ import {
     getStart,
     getStop,
     getClear,
-    getEditField
+    getEditField,
+    tick
 } from "./main";
 
 import { getAliveList } from "./extraFunctions";
@@ -238,7 +239,6 @@ describe("Test handlers", () => {
         ];
 
         getInterval.mockImplementation(() => 1);
-
         getUpdateArray.mockImplementation(() => [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
@@ -248,7 +248,6 @@ describe("Test handlers", () => {
         ]);
 
         toEqualArr.mockImplementation(() => 1);
-
         getCountAliveCells.mockImplementation(() => 0);
 
         jest.runOnlyPendingTimers();
@@ -266,11 +265,6 @@ describe("Test handlers", () => {
 
         expect(getCountAliveCells).toHaveBeenCalled();
         expect(handleButton).toHaveBeenCalled();
-        // expect(getInterval).toHaveBeenCalled();
-        // expect(getUpdateArray).toHaveBeenCalled();
-        // expect(getUpdateTable).toHaveBeenCalled();
-        // expect(toEqualArr).toHaveBeenCalled();
-        
     });
 
     test("Click on a stop button", () => {
@@ -359,5 +353,91 @@ describe("Test handlers", () => {
         expect(getActualTable).toHaveBeenCalled();
         expect(getChangeTable).toHaveBeenCalled();
         expect(getMarkupTable).toHaveBeenCalled();
+    });
+
+    test("Test function tick", () => {
+        tick(
+            aliveList,
+            table,
+            row,
+            col,
+            rangeField,
+            buttonStop,
+            buttonStart,
+            buttonClear
+        );
+
+        expect(getUpdateArray).toHaveBeenCalled();
+        expect(getUpdateTable).toHaveBeenCalled();
+        expect(toEqualArr).toHaveBeenCalled();
+        expect(getCountAliveCells).toHaveBeenCalled();
+    });
+
+    test("Time stop and cell without", () => {
+        getCountAliveCells.mockImplementation(() => 1);
+        toEqualArr.mockImplementation(() => true);
+
+        tick(
+            aliveList,
+            table,
+            row,
+            col,
+            rangeField,
+            buttonStop,
+            buttonStart,
+            buttonClear
+        );
+
+        expect(buttonStart.disabled).toBe(true);
+    });
+
+    test("Go new iteration", () => {
+        getCountAliveCells.mockImplementation(() => 1);
+        toEqualArr.mockImplementation(() => false);
+
+        tick(
+            aliveList,
+            table,
+            row,
+            col,
+            rangeField,
+            buttonStop,
+            buttonStart,
+            buttonClear
+        );
+
+        expect(buttonStart.disabled).toBe(true);
+    });
+
+    test("New time interval", () => {
+        getInterval.mockImplementation(() => 1000);
+        tick(
+            aliveList,
+            table,
+            row,
+            col,
+            rangeField,
+            buttonStop,
+            buttonStart,
+            buttonClear
+        );
+
+        expect(getUpdateArray).toHaveBeenCalled();
+    });
+
+    test("New time interval", () => {
+        getInterval.mockImplementation(() => 5000);
+        tick(
+            aliveList,
+            table,
+            row,
+            col,
+            rangeField,
+            buttonStop,
+            buttonStart,
+            buttonClear
+        );
+
+        expect(getUpdateArray).toHaveBeenCalled();
     });
 });

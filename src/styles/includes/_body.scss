@@ -86,7 +86,7 @@
 }
 
 .form {
-    @include flex-end;
+    @include flex-start;
 }
 
 .button,
@@ -111,6 +111,12 @@
     &[type="number"] {
         width: $sp * 30;
     }
+}
+
+#tickmarks {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 $sp * 5.5;
 }
 
 .button {}

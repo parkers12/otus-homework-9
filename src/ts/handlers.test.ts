@@ -4,8 +4,7 @@ import {
     handlerTableClick,
     getStart,
     getStop,
-    getClear,
-    getEditField
+    getClear
 } from "./main";
 
 jest.mock("./main", () => {
@@ -153,32 +152,35 @@ describe("Handlers application", () => {
         document.getElementById(`${config.fields[2].id}`) as HTMLInputElement;
 
     test("handlerTableClick", () => {
-        table.click();
         App();
-        // expect(handlerTableClick).toHaveBeenCalled();
+        table.click();
+        expect(handlerTableClick).toHaveBeenCalled();
     });
 
-    // test("getStart", () => {
-    //     buttonStart.click();
-    //     App();
-    //     expect(getStart).toHaveBeenCalled();
-    // });
+    test("getStart", () => {
+        App();
+        buttonStart.disabled = false;
+        buttonStart.click();
+        expect(getStart).toHaveBeenCalled();
+    });
 
-    // test("getStop", () => {
-    //     buttonStop.click();
-    //     App();
-    //     expect(getStop).toHaveBeenCalled();
-    // });
+    test("getStop", () => {
+        App();
+        buttonStop.disabled = false;
+        buttonStop.click();
+        expect(getStop).toHaveBeenCalled();
+    });
 
-    // test("getClear", () => {
-    //     buttonClear.click();
-    //     App();
-    //     expect(getClear).toHaveBeenCalled();
-    // });
+    test("getClear", () => {
+        App();
+        buttonClear.disabled = false;
+        buttonClear.click();
+        expect(getClear).toHaveBeenCalled();
+    });
 
-    // test("getEditField", () => {
-    //     rangeField.click();
-    //     App();
-    //     expect(getEditField).toHaveBeenCalled();
-    // });
+    test("getEditField", () => {
+        App();
+        rangeField.stepUp();
+        expect(rangeField.value).toBe("2");
+    });
 });

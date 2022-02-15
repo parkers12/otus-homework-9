@@ -32,7 +32,7 @@ export default function App() {
 
     table.addEventListener(
         "click",
-        () => handlerTableClick(
+        (event) => handlerTableClick(
             event,
             table,
             buttonStart,
@@ -77,7 +77,8 @@ export default function App() {
     );
 
     form.addEventListener(
-        "change", () => getEditField(
+        "change",
+        (event) => getEditField(
             event,
             aliveList,
             table,

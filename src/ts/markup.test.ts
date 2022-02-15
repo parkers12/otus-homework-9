@@ -2,7 +2,7 @@ import config from "./config";
 import markup from "./markup";
 import { getAliveList } from "./extraFunctions";
 import { getMarkupTable } from "./control";
-// import { errorMessage } from "./errorMessage";
+import { errorMessage } from "./errorMessage";
 
 jest.mock("./errorMessage", () => {
     const originalModule = jest.requireActual("./errorMessage");
@@ -16,7 +16,7 @@ jest.mock("./errorMessage", () => {
 describe("markup", () => {
     document.body.innerHTML = `<div class="app" id="app"></div>`;
     const app = document.getElementById("app") as HTMLElement;
-    markup(app);
+    markup(app, config);
 
     const table =
         document.getElementById(config.classTable) as HTMLTableElement;
@@ -78,26 +78,10 @@ describe("markup", () => {
 
     describe("Test errors", () => {
         test("Missing data in config", () => {
-            // jest.doMock("./config", () => {
-            //     const originalModule = jest.requireActual("./config");
-            //     return {
-            //         __esModule: true,
-            //         ...originalModule,
-            //         default: {
-            //             fields: []
-            //         }
-            //     } 
-            // });
-
-            // const configMock = require("./config");
-            // configMock.fields = [];
-            
-            // expect(errorMessage).toHaveBeenCalled();
-            
-        });
-
-        test("Missing data in config", () => {
-            // expect(errorMessage).toHaveBeenCalled();
+            config.fields[0].value = 2;
+            config.fields[1].value = 2;
+            markup(app, config);
+            expect(errorMessage).toHaveBeenCalled(); 
         });
     });
 });
