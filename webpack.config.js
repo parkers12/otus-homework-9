@@ -9,8 +9,8 @@ module.exports = {
     main: path.resolve(__dirname, "./src/index.ts"),
   },
   output: {
-    filename: "./js/bundle.js",
-    path: path.resolve(__dirname, "./build"),
+    filename: "js/bundle.js",
+    path: path.resolve(__dirname, "build"),
     clean: true,
     environment: {
       arrowFunction: false,
@@ -21,7 +21,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: "Game of Life",
-      template: "./index.html",
+      template: "index.html",
       filename: "index.html",
       meta: {
         charset: { charset: "utf-8" },
@@ -33,7 +33,7 @@ module.exports = {
       },
     }),
     new MiniCssExtractPlugin({
-      filename: "./styles/styles.css",
+      filename: "styles/styles.css",
     }),
     new CopyPlugin({
       patterns: [{ from: "src/fonts", to: "fonts" }],
