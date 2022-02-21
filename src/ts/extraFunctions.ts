@@ -1,5 +1,9 @@
 import config from "./config";
 
+import {
+  getStorageArrayAlive
+} from "./storage";
+
 export function getAliveList(row: number, col: number): number[][] {
     const aliveListEmpty: number[][] = [];
     for (let i = 0; i < row; i += 1) {
@@ -12,11 +16,10 @@ export function getAliveList(row: number, col: number): number[][] {
 }
 
 export function counterAroundCell(
-    aliveCell: number[][],
     rowCurent: number,
     colCurent: number
   ): number {
-    
+    const aliveCell = getStorageArrayAlive();
     let sum: number = 0;
     let rowStart: number;
     let rowFinish: number;
@@ -59,10 +62,10 @@ export function counterAroundCell(
 
 export function setConditionCell(
   arrayCounters: number[][],
-  arrayAlive: number[][],
   row: number,
   col: number
 ): number[][] {
+  const arrayAlive = getStorageArrayAlive();
   const arrayAliveNew: number[][] = getAliveList(row, col);
   for (let i = 0; i < row; i += 1) {
     for (let j = 0; j < col; j += 1) {

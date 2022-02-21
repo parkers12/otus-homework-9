@@ -15,6 +15,21 @@ import {
     getInterval
 } from "./control";
 
+import {
+    storageArrayAliveSave,
+    getStorageArrayAlive
+} from "./storage";
+
+jest.mock("./storage", () => {
+    const originalModule = jest.requireActual("./storage");
+    return {
+        __esModule: true,
+        ...originalModule,
+        storageArrayAliveSave: jest.fn(),
+        getStorageArrayAlive: jest.fn(),
+    };
+});
+
 describe("Test functions", () => {
     document.body.innerHTML = `
         <div class="app" id="app">
@@ -172,12 +187,26 @@ describe("Test functions", () => {
         });
 
         test("Get new list", () => {
+            getStorageArrayAlive.mockImplementation(() => [
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ]);
             const rowNum = "4";
             const colNum = "2";
             expect(arrayAlive[rowNum][colNum]).toEqual(0);
-            const arrayNew = getNewAliveList(arrayAlive, [rowNum, colNum]);
+            const arrayNew = getNewAliveList([rowNum, colNum]);
+            getStorageArrayAlive.mockImplementation(() => [
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0]
+            ]);
             expect(arrayNew[rowNum][colNum]).toEqual(1);
-            const arrayClear = getNewAliveList(arrayAlive, [rowNum, colNum]);
+            const arrayClear = getNewAliveList([rowNum, colNum]);
             expect(arrayClear[rowNum][colNum]).toEqual(0);
         });
 
@@ -236,32 +265,107 @@ describe("Test functions", () => {
 
         describe("getChangeTable", () => {
             test("Increase the number of lines", () => {
-                expect(arrayAlive.length).toEqual(5);
-                getChangeTable(arrayAlive, 5, 5, 6, true);
-                expect(arrayAlive.length).toEqual(6);
+                const arrBefore = [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ];
+
+                const arrAfter = [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ];
+
+                expect(arrBefore.length).toEqual(5);
+                getChangeTable(5, 5, 6, true);
+                expect(getStorageArrayAlive).toHaveBeenCalled();
+                expect(storageArrayAliveSave).toHaveBeenCalled();
+                expect(arrAfter.length).toEqual(6);
             });
 
             test("Reduce the number of lines", () => {
-                expect(arrayAlive.length).toEqual(6);
-                getChangeTable(arrayAlive, 6, 5, 5, true);
-                expect(arrayAlive.length).toEqual(5);
+                const arrBefore = [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ];
+    
+                const arrAfter = [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ];
+
+                expect(arrBefore.length).toEqual(6);
+                getChangeTable(6, 5, 5, true);
+                expect(arrAfter.length).toEqual(5);
             });
 
             test("Increase the number of columns", () => {
-                expect(arrayAlive[0].length).toEqual(5);
-                getChangeTable(arrayAlive, 5, 5, 6, false);
-                expect(arrayAlive[0].length).toEqual(6);
+                const arrBefore = [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ];
+    
+                const arrAfter = [
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0]
+                ];
+
+                expect(arrBefore[0].length).toEqual(5);
+                getChangeTable(5, 5, 6, false);
+                expect(arrAfter[0].length).toEqual(6);
             });
 
             test("Reduce the number of columns", () => {
-                expect(arrayAlive[0].length).toEqual(6);
-                getChangeTable(arrayAlive, 5, 6, 5, false);
-                expect(arrayAlive[0].length).toEqual(5);
+                const arrBefore = [
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0]
+                ];
+    
+                const arrAfter = [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ];
+
+                expect(arrBefore[0].length).toEqual(6);
+                getChangeTable(5, 6, 5, false);
+                expect(arrAfter[0].length).toEqual(5);
             });
         });
 
         describe("getUpdateTable", () => {
             test("Table cell update", () => {
+                getStorageArrayAlive.mockImplementation(() => [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ]);
                 const rowNum = 2;
                 const colNum = 2;
                 clearTable(table);
@@ -270,7 +374,7 @@ describe("Test functions", () => {
                 );
                 const cellStyleBefore = cellBefore[0].getAttribute("class");
                 expect(cellStyleBefore).toEqual(`${config.classCell}`);
-                getUpdateTable(arrayAlive, 5, 5);
+                getUpdateTable(5, 5);
                 const cellAfter = table.querySelectorAll(
                     `td[data-row='${rowNum}'][data-col='${colNum}']`
                 );
@@ -330,13 +434,13 @@ describe("Test functions", () => {
 
     describe("getUpdateArray", () => {
         test("Cell state change", () => {
-            const arrayAliveBefore = [
+            getStorageArrayAlive.mockImplementation(() => [
                 [0, 1, 0, 0, 0],
                 [1, 0, 0, 0, 0],
                 [0, 1, 0, 0, 0],
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0]
-            ];
+            ]);
 
             const arrayAliveAfter = [
                 [0, 0, 0, 0, 0],
@@ -346,7 +450,7 @@ describe("Test functions", () => {
                 [0, 0, 0, 0, 0]
             ];
 
-            const defaultExportResult = getUpdateArray(arrayAliveBefore, 5, 5);
+            const defaultExportResult = getUpdateArray(5, 5);
             expect(defaultExportResult).toEqual(arrayAliveAfter);
         })
     });

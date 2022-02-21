@@ -1,5 +1,8 @@
 import config from "./config";
-import { getAliveList } from "./extraFunctions";
+import {
+    getAliveList
+} from "./extraFunctions";
+
 import {
     getMarkupTable,
     getCountAliveCells,
@@ -16,6 +19,11 @@ import {
     getInterval
 } from "./control";
 
+import {
+    storageArrayAliveSave,
+    getStorageArrayAlive
+} from "./storage";
+
 const interval: number = config.fields[2].value * 1000;
 let timerId: any;
 let aliveCell: number[][] = [];
@@ -24,19 +32,18 @@ export function handlerTableClick(
     event: Event,
     table: HTMLTableElement,
     buttonStart: HTMLButtonElement,
-    buttonClear: HTMLButtonElement,
-    aliveList: number[][]
-): number[][] {
+    buttonClear: HTMLButtonElement
+): void {
     const coords: string[] = getPosClick(event);
     getToggleClass(coords);
     const numberAlive: number = getCountAliveCells(table);
     handleButton(numberAlive, buttonClear);
     handleButton(numberAlive, buttonStart);
-    return getNewAliveList(aliveList, coords);
+    const aliveListNew = getNewAliveList(coords);
+    storageArrayAliveSave(aliveListNew);
 }
 
 export function tick(
-    arr: number[][],
     table: HTMLTableElement,
     row: number,
     col: number,
@@ -45,6 +52,7 @@ export function tick(
     buttonStart: HTMLButtonElement,
     buttonClear: HTMLButtonElement
 ): void {
+    const arr = getStorageArrayAlive();
     const newInterval: number = getInterval(rangeField);
     let timeInterval: number;
 
@@ -53,14 +61,17 @@ export function tick(
     } else {
         timeInterval = interval;
     }
-    aliveCell = getUpdateArray(arr, row, col);
-    getUpdateTable(aliveCell, row, col);
+    aliveCell = getUpdateArray(row, col);
+    getUpdateTable(row, col);
+    storageArrayAliveSave(aliveCell);
     const equalArr: boolean = toEqualArr(arr, aliveCell);
     if(getCountAliveCells(table) <= 0) {
         clearTimeout(timerId);
+        getAliveList(row, col);
         handleButton(0, buttonStop);
     } else if(equalArr) {
         clearTimeout(timerId);
+        getAliveList(row, col);
         handleButton(0, buttonStop);
         handleButton(1, buttonStart);
         handleButton(1, buttonClear);
@@ -68,7 +79,6 @@ export function tick(
         timerId = setTimeout(
             tick,
             timeInterval,
-            aliveCell,
             table,
             row,
             col,
@@ -81,7 +91,6 @@ export function tick(
 }
     
 export function getStart(
-    arrayAlive: number[][],
     table: HTMLTableElement,
     rangeField: HTMLInputElement,
     buttonStop: HTMLButtonElement,
@@ -90,7 +99,6 @@ export function getStart(
     row: number,
     col: number
 ): void {
-    
     const numberAlive: number = getCountAliveCells(table);
     handleButton(numberAlive, buttonStop);
     handleButton(0, buttonClear);
@@ -98,7 +106,6 @@ export function getStart(
     setTimeout(
         tick,
         interval,
-        arrayAlive,
         table,
         row,
         col,
@@ -128,18 +135,16 @@ export function getClear(
     buttonClear: HTMLButtonElement,
     row: number,
     col: number
-): number[][] {
+): void {
     clearTable(table);
     const numberAlive: number = getCountAliveCells(table);
     handleButton(numberAlive, buttonClear);
     handleButton(numberAlive, buttonStart);
-    console.log(getAliveList(row, col));
-    return getAliveList(row, col);
+    storageArrayAliveSave(getAliveList(row, col));
 }
 
 export function getEditField(
     event: Event,
-    arrayAlive: number[][],
     table: HTMLTableElement,
     rowField: HTMLInputElement,
     colField: HTMLInputElement
@@ -149,13 +154,13 @@ export function getEditField(
     if(element === config.fields[0].id) {
         const dataRows = Number(rowField.value);
         aliveCell = getChangeTable(
-            arrayAlive, rowActual, colActual, dataRows, true
+            rowActual, colActual, dataRows, true
         );
         getMarkupTable(aliveCell, table);
     } else if(element === config.fields[1].id) {
         const dataCols = Number(colField.value);
         aliveCell = getChangeTable(
-            arrayAlive, rowActual, colActual, dataCols, false
+            rowActual, colActual, dataCols, false
         );
         getMarkupTable(aliveCell, table);
     }

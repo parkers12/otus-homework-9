@@ -6,12 +6,19 @@ import {
     getClear,
     getEditField
 } from "./main";
-import { getAliveList } from "./extraFunctions";
+
+import {
+    getAliveList
+} from "./extraFunctions";
+
+import {
+    storageArrayAliveSave
+} from "./storage";
 
 export default function App() {
     const row: number = config.fields[0].value;
     const col: number = config.fields[1].value;
-    const aliveList: number[][] = getAliveList(row, col);
+    storageArrayAliveSave(getAliveList(row, col));
 
     const table =
         document.getElementById(`${config.classTable}`) as HTMLTableElement;
@@ -36,15 +43,13 @@ export default function App() {
             event,
             table,
             buttonStart,
-            buttonClear,
-            aliveList
+            buttonClear
         )
     );
 
     buttonStart.addEventListener(
         "click",
         () => getStart(
-            aliveList,
             table,
             rangeField,
             buttonStop,
@@ -80,7 +85,6 @@ export default function App() {
         "change",
         (event) => getEditField(
             event,
-            aliveList,
             table,
             rowField,
             colField

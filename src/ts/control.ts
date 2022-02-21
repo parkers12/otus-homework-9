@@ -5,6 +5,11 @@ import {
   setConditionCell
 } from "./extraFunctions";
 
+import {
+  storageArrayAliveSave,
+  getStorageArrayAlive
+} from "./storage";
+
 export function getMarkupTable(
   arrayAlive: number[][],
   tbl: HTMLTableElement
@@ -45,9 +50,9 @@ export function getToggleClass(coords: string[]): void {
 }
 
 export function getNewAliveList(
-    array: number[][], coordNew: string[]
+    coordNew: string[]
   ): number[][] {
-
+  const array = getStorageArrayAlive();
   const row: number = Number(coordNew[0]);
   const col: number = Number(coordNew[1]);
   const arrayNew: number[][] = array.slice();
@@ -85,24 +90,23 @@ export function handleButton(
 }
 
 export function getUpdateArray(
-  arrayAlive: number[][],
   row: number,
   col: number
 ): number[][]  {
   const counterAliveAround: number[][] = getAliveList(row, col);
   for (let i = 0; i < row; i += 1) {
     for (let j = 0; j < col; j += 1) {
-      counterAliveAround[i][j] = counterAroundCell(arrayAlive, i, j);
+      counterAliveAround[i][j] = counterAroundCell(i, j);
     }
   }
-  return setConditionCell(counterAliveAround, arrayAlive, row, col);
+  return setConditionCell(counterAliveAround, row, col);
 }
 
 export function getUpdateTable(
-  arrayAlive: number[][],
   row: number,
   col: number
 ): void  {
+  const arrayAlive = getStorageArrayAlive();
   for (let i = 0; i < row; i += 1) {
     for (let j = 0; j < col; j += 1) {
       const cell = document.querySelectorAll(
@@ -125,12 +129,12 @@ export function toEqualArr(array1: number[][], array2: number[][]):boolean {
 }
 
 export function getChangeTable(
-  arrayAlive: number[][],
   row: number,
   col: number,
   newValue: number,
   isRow: boolean
 ): number[][] {
+  const arrayAlive = getStorageArrayAlive();
   if(isRow) {
     if(row > newValue) {
       arrayAlive.splice(-1);
@@ -149,7 +153,8 @@ export function getChangeTable(
       }
     }
   }
-    return arrayAlive;
+  storageArrayAliveSave(arrayAlive);
+  return arrayAlive;
 }
 
 export function getActualTable(table: HTMLTableElement): number[] {

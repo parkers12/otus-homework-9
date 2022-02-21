@@ -27,7 +27,20 @@ import {
     getInterval
 } from "./control";
 
-jest.useFakeTimers();
+import {
+    storageArrayAliveSave,
+    getStorageArrayAlive
+} from "./storage";
+
+jest.mock("./storage", () => {
+    const originalModule = jest.requireActual("./storage");
+    return {
+        __esModule: true,
+        ...originalModule,
+        storageArrayAliveSave: jest.fn(),
+        getStorageArrayAlive: jest.fn(),
+    };
+});
 
 jest.mock("./control", () => {
     const originalModule = jest.requireActual("./control");
@@ -59,6 +72,8 @@ jest.mock("./extraFunctions", () => {
       getAliveList: jest.fn(),
     };
 });
+
+jest.useFakeTimers();
 
 describe("Test handlers", () => {
     document.body.innerHTML = `
@@ -197,13 +212,13 @@ describe("Test handlers", () => {
     const rangeField =
         document.getElementById(`${config.fields[2].id}`) as HTMLInputElement;
 
-    const aliveList = [
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0]
-    ];
+    // const aliveList = [
+    //     [0, 0, 0, 0, 0],
+    //     [0, 0, 0, 0, 0],
+    //     [0, 0, 0, 0, 0],
+    //     [0, 0, 0, 0, 0],
+    //     [0, 0, 0, 0, 0]
+    // ];
 
     test("Click on a cell table", () => {
         const mEvent: any = {
@@ -215,18 +230,27 @@ describe("Test handlers", () => {
             },
         } as unknown as Event;
 
+        getStorageArrayAlive.mockImplementation([
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
+        ]);
+
         handlerTableClick(
             mEvent,
             table,
             buttonStart,
-            buttonClear,
-            aliveList
+            buttonClear
         );
+        
         expect(getPosClick).toHaveBeenCalled();
         expect(getToggleClass).toHaveBeenCalled();
         expect(getCountAliveCells).toHaveBeenCalled();
         expect(handleButton).toHaveBeenCalled();
         expect(getNewAliveList).toHaveBeenCalled();
+        expect(storageArrayAliveSave).toHaveBeenCalled();
     });
 
     test("Click on a start button", () => {
@@ -253,7 +277,6 @@ describe("Test handlers", () => {
         jest.runOnlyPendingTimers();
         
         getStart(
-            aliveListNew,
             table,
             rangeField,
             buttonStop,
@@ -314,7 +337,6 @@ describe("Test handlers", () => {
 
         getEditField(
             mEvent,
-            aliveList,
             table,
             rowField,
             colField
@@ -345,7 +367,6 @@ describe("Test handlers", () => {
 
         getEditField(
             mEvent,
-            aliveList,
             table,
             rowField,
             colField
@@ -356,8 +377,15 @@ describe("Test handlers", () => {
     });
 
     test("Test function tick", () => {
+        getStorageArrayAlive.mockImplementation(() => [
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
+        ]);
+        
         tick(
-            aliveList,
             table,
             row,
             col,
@@ -366,8 +394,9 @@ describe("Test handlers", () => {
             buttonStart,
             buttonClear
         );
-
+        expect(getStorageArrayAlive).toHaveBeenCalled();
         expect(getUpdateArray).toHaveBeenCalled();
+        expect(getInterval).toHaveBeenCalled();
         expect(getUpdateTable).toHaveBeenCalled();
         expect(toEqualArr).toHaveBeenCalled();
         expect(getCountAliveCells).toHaveBeenCalled();
@@ -378,7 +407,6 @@ describe("Test handlers", () => {
         toEqualArr.mockImplementation(() => true);
 
         tick(
-            aliveList,
             table,
             row,
             col,
@@ -396,7 +424,6 @@ describe("Test handlers", () => {
         toEqualArr.mockImplementation(() => false);
 
         tick(
-            aliveList,
             table,
             row,
             col,
@@ -412,7 +439,6 @@ describe("Test handlers", () => {
     test("New time interval", () => {
         getInterval.mockImplementation(() => 1000);
         tick(
-            aliveList,
             table,
             row,
             col,
@@ -428,7 +454,6 @@ describe("Test handlers", () => {
     test("New time interval", () => {
         getInterval.mockImplementation(() => 5000);
         tick(
-            aliveList,
             table,
             row,
             col,
