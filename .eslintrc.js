@@ -12,6 +12,15 @@ module.exports = {
   },
   plugins: ["jest", "@typescript-eslint"],
   rules: {
+    "max-len": [
+      "error",
+      {
+        ignoreComments: true,
+      },
+    ],
+    "no-console": "off",
+    "no-alert": "off",
+    "import/prefer-default-export": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -20,13 +29,6 @@ module.exports = {
         js: "never",
       },
     ],
-    "max-len": [
-      "error",
-      {
-        ignoreComments: true,
-      },
-    ],
-    "import/prefer-default-export": "off",
   },
   settings: {
     "import/resolver": {

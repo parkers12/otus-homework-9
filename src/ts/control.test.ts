@@ -1,37 +1,34 @@
 import config from "./config";
 import {
-    getMarkupTable,
-    getPosClick,
-    getToggleClass,
-    getNewAliveList,
-    clearTable,
-    getCountAliveCells,
-    handleButton,
-    getActualTable,
-    getChangeTable,
-    getUpdateTable,
-    getUpdateArray,
-    toEqualArr,
-    getInterval
+  getMarkupTable,
+  getPosClick,
+  getToggleClass,
+  getNewAliveList,
+  clearTable,
+  getCountAliveCells,
+  handleButton,
+  getActualTable,
+  getChangeTable,
+  getUpdateTable,
+  getUpdateArray,
+  toEqualArr,
+  getInterval,
 } from "./control";
 
-import {
-    storageArrayAliveSave,
-    getStorageArrayAlive
-} from "./storage";
+import { storageArrayAliveSave, getStorageArrayAlive } from "./storage";
 
 jest.mock("./storage", () => {
-    const originalModule = jest.requireActual("./storage");
-    return {
-        __esModule: true,
-        ...originalModule,
-        storageArrayAliveSave: jest.fn(),
-        getStorageArrayAlive: jest.fn(),
-    };
+  const originalModule = jest.requireActual("./storage");
+  return {
+    __esModule: true,
+    ...originalModule,
+    storageArrayAliveSave: jest.fn(),
+    getStorageArrayAlive: jest.fn(),
+  };
 });
 
 describe("Test functions", () => {
-    document.body.innerHTML = `
+  document.body.innerHTML = `
         <div class="app" id="app">
             <main class="main" id="main">
                 <div class="form" id="form">
@@ -150,308 +147,307 @@ describe("Test functions", () => {
         </div>
     `;
 
-    const table =
-        document.getElementById(config.classTable) as HTMLTableElement;
+  const table = document.getElementById(config.classTable) as HTMLTableElement;
 
-    describe("Changing the table", () => {
-        const arrayAlive = [
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]
+  describe("Changing the table", () => {
+    const arrayAlive = [
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 1, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+    ];
+
+    getMarkupTable(arrayAlive, table);
+
+    const rowArray = table.querySelectorAll("tr");
+
+    test("Get an array of live cells", () => {
+      const rowNum = 2;
+      const colNum = 2;
+      const colArray = rowArray[rowNum].querySelectorAll("td");
+      const cellStyle = colArray[colNum].classList;
+      expect(cellStyle[0]).toEqual(config.classCell);
+      expect(cellStyle[1]).toEqual(config.classCellActive);
+    });
+
+    test("Get coordinates click", () => {
+      const rowNum = "2";
+      const colNum = "2";
+      const mEvent: any = {
+        target: table.rows[rowNum].cells[colNum],
+      } as unknown as Event;
+
+      const res = getPosClick(mEvent);
+      expect(res).toStrictEqual([rowNum, colNum]);
+    });
+
+    test("Get new list", () => {
+      getStorageArrayAlive.mockImplementation(() => [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+      ]);
+      const rowNum = "4";
+      const colNum = "2";
+      expect(arrayAlive[rowNum][colNum]).toEqual(0);
+      const arrayNew = getNewAliveList([rowNum, colNum]);
+      getStorageArrayAlive.mockImplementation(() => [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0],
+      ]);
+      expect(arrayNew[rowNum][colNum]).toEqual(1);
+      const arrayClear = getNewAliveList([rowNum, colNum]);
+      expect(arrayClear[rowNum][colNum]).toEqual(0);
+    });
+
+    test("Change class in cell", () => {
+      const rowNum = "1";
+      const colNum = "4";
+      const colArray = rowArray[rowNum].cells;
+      const cellStyle = colArray[colNum].classList;
+      expect(cellStyle[rowNum]).toEqual(undefined);
+      getToggleClass([rowNum, colNum]);
+      expect(cellStyle[rowNum]).toEqual(config.classCellActive);
+    });
+
+    test("clearTable", () => {
+      const rowNum = "1";
+      const colNum = "4";
+      const colArray = rowArray[rowNum].cells;
+      const cellStyle = colArray[colNum].classList;
+      expect(cellStyle[rowNum]).toEqual(config.classCellActive);
+      clearTable(table);
+      expect(cellStyle[rowNum]).toEqual(undefined);
+    });
+
+    test("getCountAliveCells", () => {
+      clearTable(table);
+      getToggleClass(["2", "3"]);
+      getToggleClass(["1", "0"]);
+      getToggleClass(["3", "4"]);
+      const numAlive: number = getCountAliveCells(table);
+      expect(numAlive).toEqual(3);
+    });
+
+    describe("handleButton", () => {
+      const buttonClear = document.getElementById(
+        "buttonClear"
+      ) as HTMLButtonElement;
+      test("Change the state of the button to active", () => {
+        expect(buttonClear.disabled).toBe(true);
+        handleButton(1, buttonClear);
+        expect(buttonClear.disabled).toBe(false);
+      });
+
+      test("Change the state of the button to inactive", () => {
+        expect(buttonClear.disabled).toBe(false);
+        handleButton(0, buttonClear);
+        expect(buttonClear.disabled).toBe(true);
+      });
+    });
+
+    describe("getActualTable", () => {
+      test("Actual number of rows and columns", () => {
+        const sizeTable: number[] = getActualTable(table);
+        expect(sizeTable[0]).toEqual(5);
+        expect(sizeTable[1]).toEqual(5);
+      });
+    });
+
+    describe("getChangeTable", () => {
+      test("Increase the number of lines", () => {
+        const arrBefore = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
         ];
 
-        getMarkupTable(arrayAlive, table);
+        const arrAfter = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+        ];
 
-        const rowArray = table.querySelectorAll("tr");
+        expect(arrBefore.length).toEqual(5);
+        getChangeTable(5, 5, 6, true);
+        expect(getStorageArrayAlive).toHaveBeenCalled();
+        expect(storageArrayAliveSave).toHaveBeenCalled();
+        expect(arrAfter.length).toEqual(6);
+      });
 
-        test("Get an array of live cells", () => {
-            const rowNum = 2;
-            const colNum = 2;
-            const colArray = rowArray[rowNum].querySelectorAll("td");
-            const cellStyle = colArray[colNum].classList;
-            expect(cellStyle[0]).toEqual(config.classCell);
-            expect(cellStyle[1]).toEqual(config.classCellActive);
-        });
+      test("Reduce the number of lines", () => {
+        const arrBefore = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+        ];
 
-        test("Get coordinates click", () => {
-            const rowNum = "2";
-            const colNum = "2";
-            const mEvent: any = {
-                target: table.rows[rowNum].cells[colNum],
-            } as unknown as Event;
+        const arrAfter = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+        ];
 
-            const res = getPosClick(mEvent);
-            expect(res).toStrictEqual([rowNum, colNum]);
-        });
+        expect(arrBefore.length).toEqual(6);
+        getChangeTable(6, 5, 5, true);
+        expect(arrAfter.length).toEqual(5);
+      });
 
-        test("Get new list", () => {
-            getStorageArrayAlive.mockImplementation(() => [
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0]
-            ]);
-            const rowNum = "4";
-            const colNum = "2";
-            expect(arrayAlive[rowNum][colNum]).toEqual(0);
-            const arrayNew = getNewAliveList([rowNum, colNum]);
-            getStorageArrayAlive.mockImplementation(() => [
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 1, 0, 0]
-            ]);
-            expect(arrayNew[rowNum][colNum]).toEqual(1);
-            const arrayClear = getNewAliveList([rowNum, colNum]);
-            expect(arrayClear[rowNum][colNum]).toEqual(0);
-        });
+      test("Increase the number of columns", () => {
+        const arrBefore = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+        ];
 
-        test("Change class in cell", () => {
-            const rowNum = "1";
-            const colNum = "4";
-            const colArray = rowArray[rowNum].cells;
-            const cellStyle = colArray[colNum].classList;
-            expect(cellStyle[rowNum]).toEqual(undefined);
-            getToggleClass([rowNum, colNum]);
-            expect(cellStyle[rowNum]).toEqual(config.classCellActive);
-        });
+        const arrAfter = [
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+        ];
 
-        test("clearTable", () => {
-            const rowNum = "1";
-            const colNum = "4";
-            const colArray = rowArray[rowNum].cells;
-            const cellStyle = colArray[colNum].classList;
-            expect(cellStyle[rowNum]).toEqual(config.classCellActive);
-            clearTable(table);
-            expect(cellStyle[rowNum]).toEqual(undefined);
-        });
+        expect(arrBefore[0].length).toEqual(5);
+        getChangeTable(5, 5, 6, false);
+        expect(arrAfter[0].length).toEqual(6);
+      });
 
-        test("getCountAliveCells", () => {
-            clearTable(table);
-            getToggleClass(["2", "3"]);
-            getToggleClass(["1", "0"]);
-            getToggleClass(["3", "4"]);
-            const numAlive: number = getCountAliveCells(table);
-            expect(numAlive).toEqual(3);
-        });
+      test("Reduce the number of columns", () => {
+        const arrBefore = [
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+        ];
 
-        describe("handleButton", () => {
-            const buttonClear =
-                document.getElementById("buttonClear") as HTMLButtonElement;
-            test("Change the state of the button to active", () => {
-                expect(buttonClear.disabled).toBe(true);
-                handleButton(1, buttonClear);
-                expect(buttonClear.disabled).toBe(false);
-            });
+        const arrAfter = [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+        ];
 
-            test("Change the state of the button to inactive", () => {
-                expect(buttonClear.disabled).toBe(false);
-                handleButton(0, buttonClear);
-                expect(buttonClear.disabled).toBe(true);
-            });
-        });
-
-        describe("getActualTable", () => {
-            test("Actual number of rows and columns", () => {
-                const sizeTable: number[] = getActualTable(table);
-                expect(sizeTable[0]).toEqual(5);
-                expect(sizeTable[1]).toEqual(5);
-            });
-        });
-
-        describe("getChangeTable", () => {
-            test("Increase the number of lines", () => {
-                const arrBefore = [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ];
-
-                const arrAfter = [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ];
-
-                expect(arrBefore.length).toEqual(5);
-                getChangeTable(5, 5, 6, true);
-                expect(getStorageArrayAlive).toHaveBeenCalled();
-                expect(storageArrayAliveSave).toHaveBeenCalled();
-                expect(arrAfter.length).toEqual(6);
-            });
-
-            test("Reduce the number of lines", () => {
-                const arrBefore = [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ];
-    
-                const arrAfter = [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ];
-
-                expect(arrBefore.length).toEqual(6);
-                getChangeTable(6, 5, 5, true);
-                expect(arrAfter.length).toEqual(5);
-            });
-
-            test("Increase the number of columns", () => {
-                const arrBefore = [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ];
-    
-                const arrAfter = [
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0]
-                ];
-
-                expect(arrBefore[0].length).toEqual(5);
-                getChangeTable(5, 5, 6, false);
-                expect(arrAfter[0].length).toEqual(6);
-            });
-
-            test("Reduce the number of columns", () => {
-                const arrBefore = [
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0]
-                ];
-    
-                const arrAfter = [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ];
-
-                expect(arrBefore[0].length).toEqual(6);
-                getChangeTable(5, 6, 5, false);
-                expect(arrAfter[0].length).toEqual(5);
-            });
-        });
-
-        describe("getUpdateTable", () => {
-            test("Table cell update", () => {
-                getStorageArrayAlive.mockImplementation(() => [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 1, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ]);
-                const rowNum = 2;
-                const colNum = 2;
-                clearTable(table);
-                const cellBefore = table.querySelectorAll(
-                    `td[data-row='${rowNum}'][data-col='${colNum}']`
-                );
-                const cellStyleBefore = cellBefore[0].getAttribute("class");
-                expect(cellStyleBefore).toEqual(`${config.classCell}`);
-                getUpdateTable(5, 5);
-                const cellAfter = table.querySelectorAll(
-                    `td[data-row='${rowNum}'][data-col='${colNum}']`
-                );
-                const classes = cellAfter[0].getAttribute("class")!.split(" ");
-                expect(classes[0]).toEqual(`${config.classCell}`);
-                expect(classes[1]).toEqual(`${config.classCellActive}`);
-            });
-        });
+        expect(arrBefore[0].length).toEqual(6);
+        getChangeTable(5, 6, 5, false);
+        expect(arrAfter[0].length).toEqual(5);
+      });
     });
 
-    describe("toEqualArr", () => {
-        test("Equal arrays", () => {
-            const array1 = [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]
-            ];
+    describe("getUpdateTable", () => {
+      test("Table cell update", () => {
+        getStorageArrayAlive.mockImplementation(() => [
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+        ]);
+        const rowNum = 2;
+        const colNum = 2;
+        clearTable(table);
+        const cellBefore = table.querySelectorAll(
+          `td[data-row='${rowNum}'][data-col='${colNum}']`
+        );
+        const cellStyleBefore = cellBefore[0].getAttribute("class");
+        expect(cellStyleBefore).toEqual(`${config.classCell}`);
+        getUpdateTable(5, 5);
+        const cellAfter = table.querySelectorAll(
+          `td[data-row='${rowNum}'][data-col='${colNum}']`
+        );
+        const classes = cellAfter[0].getAttribute("class")!.split(" ");
+        expect(classes[0]).toEqual(`${config.classCell}`);
+        expect(classes[1]).toEqual(`${config.classCellActive}`);
+      });
+    });
+  });
 
-            const array2 = [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]
-            ];
-            const isEqual = toEqualArr(array1, array2);
-            expect(isEqual).toBe(true);
-        });
+  describe("toEqualArr", () => {
+    test("Equal arrays", () => {
+      const array1 = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+      ];
 
-        test("Not equal arrays", () => {
-            const array1 = [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 1, 0]
-            ];
-
-            const array2 = [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]
-            ];
-            const isEqual = toEqualArr(array1, array2);
-            expect(isEqual).toBe(false);
-        });
+      const array2 = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+      ];
+      const isEqual = toEqualArr(array1, array2);
+      expect(isEqual).toBe(true);
     });
 
-    describe("getInterval", () => {
-        test("convert interval", () => {
-            const rangeInitial: number = 3;
-            const rangeField =
-                document.getElementById("range") as HTMLInputElement;
-            expect(rangeField.value).toBe('1');
-            rangeField.setAttribute("value", `${rangeInitial}`);
-            const rangeValue = getInterval(rangeField);
-            expect(rangeField.value).toBe(String(rangeInitial));
-            expect(rangeValue).toEqual(rangeInitial * 1000);
-        });
+    test("Not equal arrays", () => {
+      const array1 = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 1, 0],
+      ];
+
+      const array2 = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+      ];
+      const isEqual = toEqualArr(array1, array2);
+      expect(isEqual).toBe(false);
     });
+  });
 
-    describe("getUpdateArray", () => {
-        test("Cell state change", () => {
-            getStorageArrayAlive.mockImplementation(() => [
-                [0, 1, 0, 0, 0],
-                [1, 0, 0, 0, 0],
-                [0, 1, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0]
-            ]);
-
-            const arrayAliveAfter = [
-                [0, 0, 0, 0, 0],
-                [1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0]
-            ];
-
-            const defaultExportResult = getUpdateArray(5, 5);
-            expect(defaultExportResult).toEqual(arrayAliveAfter);
-        })
+  describe("getInterval", () => {
+    test("convert interval", () => {
+      const rangeInitial: number = 3;
+      const rangeField = document.getElementById("range") as HTMLInputElement;
+      expect(rangeField.value).toBe("1");
+      rangeField.setAttribute("value", `${rangeInitial}`);
+      const rangeValue = getInterval(rangeField);
+      expect(rangeField.value).toBe(String(rangeInitial));
+      expect(rangeValue).toEqual(rangeInitial * 1000);
     });
+  });
+
+  describe("getUpdateArray", () => {
+    test("Cell state change", () => {
+      getStorageArrayAlive.mockImplementation(() => [
+        [0, 1, 0, 0, 0],
+        [1, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+      ]);
+
+      const arrayAliveAfter = [
+        [0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+      ];
+
+      const defaultExportResult = getUpdateArray(5, 5);
+      expect(defaultExportResult).toEqual(arrayAliveAfter);
+    });
+  });
 });

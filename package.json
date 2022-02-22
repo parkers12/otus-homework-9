@@ -5,8 +5,8 @@
   "main": "./src/index.js",
   "scripts": {
     "test": "jest --coverage",
-    "lint": "eslint . --ext .js, .ts && prettier --check .",
-    "lint:fix": "eslint . --fix --ext .js,.ts && prettier --write .",
+    "lint": "eslint . && prettier --check .",
+    "lint:fix": "eslint . --fix && prettier --write .",
     "prepare": "husky install",
     "dev": "webpack serve --node-env development",
     "build": "webpack --node-env production"

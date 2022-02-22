@@ -1,123 +1,125 @@
-.main {}
+.main {
+}
 
 .wrapper {
-    width: $xl;
-    margin: 0 auto;
+  width: $xl;
+  margin: 0 auto;
 }
 
 .table {
-    border: 0.4rem solid darken($white, 5%);
+  border: 0.4rem solid darken($white, 5%);
 }
 
 .table,
 .form {
-    margin-bottom: $sp * 5;
+  margin-bottom: $sp * 5;
 }
 
 .row,
 .cell {
-    &:not(&:last-child) {
-        border: 0.2rem solid $white;
-    }
+  &:not(&:last-child) {
+    border: 0.2rem solid $white;
+  }
 }
 
 .cell {
-    width: $sp * 6;
-    height: $sp * 6;
-    cursor: pointer;
-    background-color: darken($white, 1%);
-    transition: $transition;
+  width: $sp * 6;
+  height: $sp * 6;
+  cursor: pointer;
+  background-color: darken($white, 1%);
+  transition: $transition;
 
-    &:hover {
-        background-color: darken($white, 5%);
+  &:hover {
+    background-color: darken($white, 5%);
+  }
+
+  &.cell {
+    &_alive,
+    &_born,
+    &_die {
+      // cursor: not-allowed;
     }
 
-    &.cell {
-        &_alive,
-        &_born,
-        &_die {
-            // cursor: not-allowed;
-        }
-    
-        &_alive,
-        &_alive-die {
-            background-color: rgba($green, 0.7);
-    
-            &:hover {
-                background-color: $green;
-            }
-        }
-    
-        &_alive-die {
-            position: relative;
-    
-            &:after {
-                content: "";
-                position: absolute;
-                top: 0;
-                right: 0;
-                border: $sp solid transparent;
-                border-top: $sp solid rgba($red, 0.7);
-                border-right: $sp solid rgba($red, 0.7);
-            }
-    
-            &:hover:after {
-                border-top: $sp solid $red;
-                border-right: $sp solid $red;
-            }
-        }
-    
-        &_born {
-            background-color: rgba($green, 0.1);
-    
-            &:hover {
-                background-color: rgba($green, 0.1);
-            }
-        }
-    
-        &_die {
-            background-color: rgba($red, 0.1);
-    
-            &:hover {
-                background-color: rgba($red, 0.1);
-            }
-        }
+    &_alive,
+    &_alive-die {
+      background-color: rgba($green, 0.7);
+
+      &:hover {
+        background-color: $green;
+      }
     }
+
+    &_alive-die {
+      position: relative;
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: $sp solid transparent;
+        border-top: $sp solid rgba($red, 0.7);
+        border-right: $sp solid rgba($red, 0.7);
+      }
+
+      &:hover:after {
+        border-top: $sp solid $red;
+        border-right: $sp solid $red;
+      }
+    }
+
+    &_born {
+      background-color: rgba($green, 0.1);
+
+      &:hover {
+        background-color: rgba($green, 0.1);
+      }
+    }
+
+    &_die {
+      background-color: rgba($red, 0.1);
+
+      &:hover {
+        background-color: rgba($red, 0.1);
+      }
+    }
+  }
 }
 
 .form {
-    @include flex-start;
+  @include flex-start;
 }
 
 .button,
 .form-item {
-    & + & {
-        margin-left: $sp * 10;
-    }
+  & + & {
+    margin-left: $sp * 10;
+  }
 }
 
 .form-item {
-    @include flex-column;
+  @include flex-column;
 }
 
 .label {
-    font-size: $font-size-main;
-    line-height: $line-height;
-    color: $blue;
-    margin-bottom: $sp;
+  font-size: $font-size-main;
+  line-height: $line-height;
+  color: $blue;
+  margin-bottom: $sp;
 }
 
 .input {
-    &[type="number"] {
-        width: $sp * 30;
-    }
+  &[type="number"] {
+    width: $sp * 30;
+  }
 }
 
 #tickmarks {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 $sp * 5.5;
-    color: rgba($black, 0.3);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 $sp * 5.5;
+  color: rgba($black, 0.3);
 }
 
-.button {}
+.button {
+}

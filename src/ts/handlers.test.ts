@@ -1,27 +1,22 @@
 import config from "./config";
 import App from "./handlers";
-import {
-    handlerTableClick,
-    getStart,
-    getStop,
-    getClear
-} from "./main";
+import { handlerTableClick, getStart, getStop, getClear } from "./main";
 
 jest.mock("./main", () => {
-    const originalModule = jest.requireActual("./main");
-    return {
-        __esModule: true,
-        ...originalModule,
-        handlerTableClick: jest.fn(),
-        getStart: jest.fn(),
-        getStop: jest.fn(),
-        getClear: jest.fn(),
-        getEditField: jest.fn(),
-    };
+  const originalModule = jest.requireActual("./main");
+  return {
+    __esModule: true,
+    ...originalModule,
+    handlerTableClick: jest.fn(),
+    getStart: jest.fn(),
+    getStop: jest.fn(),
+    getClear: jest.fn(),
+    getEditField: jest.fn(),
+  };
 });
 
 describe("Handlers application", () => {
-    document.body.innerHTML = `
+  document.body.innerHTML = `
         <div class="app" id="app">
             <main class="main" id="main">
                 <div class="form" id="form">
@@ -140,47 +135,52 @@ describe("Handlers application", () => {
         </div>
     `;
 
-    const table =
-        document.getElementById(`${config.classTable}`) as HTMLTableElement;
-    const buttonStart =
-        document.getElementById(`${config.button[0].id}`) as HTMLButtonElement;
-    const buttonStop =
-        document.getElementById(`${config.button[1].id}`) as HTMLButtonElement;
-    const buttonClear =
-        document.getElementById(`${config.button[2].id}`) as HTMLButtonElement;
-    const rangeField =
-        document.getElementById(`${config.fields[2].id}`) as HTMLInputElement;
+  const table = document.getElementById(
+    `${config.classTable}`
+  ) as HTMLTableElement;
+  const buttonStart = document.getElementById(
+    `${config.button[0].id}`
+  ) as HTMLButtonElement;
+  const buttonStop = document.getElementById(
+    `${config.button[1].id}`
+  ) as HTMLButtonElement;
+  const buttonClear = document.getElementById(
+    `${config.button[2].id}`
+  ) as HTMLButtonElement;
+  const rangeField = document.getElementById(
+    `${config.fields[2].id}`
+  ) as HTMLInputElement;
 
-    test("handlerTableClick", () => {
-        App();
-        table.click();
-        expect(handlerTableClick).toHaveBeenCalled();
-    });
+  test("handlerTableClick", () => {
+    App();
+    table.click();
+    expect(handlerTableClick).toHaveBeenCalled();
+  });
 
-    test("getStart", () => {
-        App();
-        buttonStart.disabled = false;
-        buttonStart.click();
-        expect(getStart).toHaveBeenCalled();
-    });
+  test("getStart", () => {
+    App();
+    buttonStart.disabled = false;
+    buttonStart.click();
+    expect(getStart).toHaveBeenCalled();
+  });
 
-    test("getStop", () => {
-        App();
-        buttonStop.disabled = false;
-        buttonStop.click();
-        expect(getStop).toHaveBeenCalled();
-    });
+  test("getStop", () => {
+    App();
+    buttonStop.disabled = false;
+    buttonStop.click();
+    expect(getStop).toHaveBeenCalled();
+  });
 
-    test("getClear", () => {
-        App();
-        buttonClear.disabled = false;
-        buttonClear.click();
-        expect(getClear).toHaveBeenCalled();
-    });
+  test("getClear", () => {
+    App();
+    buttonClear.disabled = false;
+    buttonClear.click();
+    expect(getClear).toHaveBeenCalled();
+  });
 
-    test("getEditField", () => {
-        App();
-        rangeField.stepUp();
-        expect(rangeField.value).toBe("2");
-    });
+  test("getEditField", () => {
+    App();
+    rangeField.stepUp();
+    expect(rangeField.value).toBe("2");
+  });
 });
