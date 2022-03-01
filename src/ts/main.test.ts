@@ -314,7 +314,7 @@ describe("Test handlers", () => {
 
     rowField.value = "6";
 
-    getEditField(mEvent, table, rowField, colField);
+    getEditField(mEvent, table, rowField, colField, buttonStart, buttonClear);
     expect(getActualTable).toHaveBeenCalled();
     expect(getChangeTable).toHaveBeenCalled();
     expect(getMarkupTable).toHaveBeenCalled();
@@ -338,7 +338,7 @@ describe("Test handlers", () => {
 
     colField.value = "6";
 
-    getEditField(mEvent, table, rowField, colField);
+    getEditField(mEvent, table, rowField, colField, buttonStart, buttonClear);
     expect(getActualTable).toHaveBeenCalled();
     expect(getChangeTable).toHaveBeenCalled();
     expect(getMarkupTable).toHaveBeenCalled();

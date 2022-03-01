@@ -9,4 +9,9 @@
   <body>
     <div id="app"></div>
   </body>
+  <script>
+    function replacer(el) {
+      el.value = el.value.replace(/[^0-9+]/g, ''); 
+    }
+  </script>
 </html>

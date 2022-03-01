@@ -12,7 +12,7 @@ const config = {
       label: "Rows",
       value: 5,
       min: 3,
-      max: 30,
+      max: 20,
       step: 1,
     },
     {
@@ -24,7 +24,7 @@ const config = {
       label: "Cols",
       value: 5,
       min: 3,
-      max: 30,
+      max: 20,
       step: 1,
     },
     {

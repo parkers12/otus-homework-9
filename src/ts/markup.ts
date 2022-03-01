@@ -49,6 +49,10 @@ function markup(elem: HTMLElement, config: any): void {
     colField.setAttribute("max", String(max));
     colField.setAttribute("step", String(step));
 
+    if (config.fields[i].type === "number") {
+      colField.setAttribute("oninput", "replacer(this)");
+    }
+
     if (config.fields[i].type === "range") {
       formItem
         .appendChild(colField)

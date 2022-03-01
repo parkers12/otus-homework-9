@@ -56,6 +56,6 @@ export default function App() {
   );
 
   form.addEventListener("change", (event) =>
-    getEditField(event, table, rowField, colField)
+    getEditField(event, table, rowField, colField, buttonStart, buttonClear)
   );
 }

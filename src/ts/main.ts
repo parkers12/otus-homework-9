@@ -1,5 +1,8 @@
 import config from "./config";
-import { getAliveList } from "./extraFunctions";
+import {
+  getAliveList,
+  counterAroundCell
+} from "./extraFunctions";
 
 import {
   getMarkupTable,
@@ -20,7 +23,7 @@ import {
 import { storageArrayAliveSave, getStorageArrayAlive } from "./storage";
 
 const interval: number = config.fields[2].value * 1000;
-let timerId: any;
+let timerId: number;
 let aliveCell: number[][] = [];
 
 export function handlerTableClick(
@@ -71,7 +74,7 @@ export function tick(
     handleButton(1, buttonStart);
     handleButton(1, buttonClear);
   } else {
-    timerId = setTimeout(
+    timerId = window.setTimeout(
       tick,
       timeInterval,
       table,
@@ -142,17 +145,30 @@ export function getEditField(
   event: Event,
   table: HTMLTableElement,
   rowField: HTMLInputElement,
-  colField: HTMLInputElement
+  colField: HTMLInputElement,
+  buttonStart: HTMLButtonElement,
+  buttonClear: HTMLButtonElement,
 ): void {
   const element = (event.target as HTMLElement).getAttribute("id");
   const [rowActual, colActual] = getActualTable(table);
   if (element === config.fields[0].id) {
-    const dataRows = Number(rowField.value);
+    let dataRows = Number(rowField.value);
+    if (config.fields[0].min > dataRows) {
+      dataRows = config.fields[0].min;
+    }
     aliveCell = getChangeTable(rowActual, colActual, dataRows, true);
     getMarkupTable(aliveCell, table);
   } else if (element === config.fields[1].id) {
-    const dataCols = Number(colField.value);
+    let dataCols = Number(colField.value);
+    if (config.fields[1].max < dataCols) {
+      dataCols = config.fields[1].max;
+    }
     aliveCell = getChangeTable(rowActual, colActual, dataCols, false);
     getMarkupTable(aliveCell, table);
+  }
+  const numberAlive: number = getCountAliveCells(table);
+  if(numberAlive <= 0 && !buttonClear.disabled && !buttonStart.disabled) {
+    handleButton(numberAlive, buttonClear);
+    handleButton(numberAlive, buttonStart);
   }
 }
