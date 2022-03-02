@@ -1,7 +1,6 @@
 import config from "./config";
 import {
-  getAliveList,
-  counterAroundCell
+  getAliveList
 } from "./extraFunctions";
 
 import {

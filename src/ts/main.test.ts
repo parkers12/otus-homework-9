@@ -234,7 +234,7 @@ describe("Test handlers", () => {
       },
     } as unknown as Event;
 
-    getStorageArrayAlive.mockImplementation([
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() =>[
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -253,16 +253,8 @@ describe("Test handlers", () => {
   });
 
   test("Click on a start button", () => {
-    const aliveListNew = [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ];
-
-    getInterval.mockImplementation(() => 1);
-    getUpdateArray.mockImplementation(() => [
+    (getInterval as unknown as jest.Mock).mockImplementation(() => 1);
+    (getUpdateArray as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -270,8 +262,8 @@ describe("Test handlers", () => {
       [0, 0, 0, 0, 0],
     ]);
 
-    toEqualArr.mockImplementation(() => 1);
-    getCountAliveCells.mockImplementation(() => 0);
+    (toEqualArr as unknown as jest.Mock).mockImplementation(() => 1);
+    (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 0);
 
     jest.runOnlyPendingTimers();
 
@@ -302,8 +294,8 @@ describe("Test handlers", () => {
       },
     } as unknown as Event;
 
-    getActualTable.mockImplementation(() => [5, 5]);
-    getChangeTable.mockImplementation(() => [
+    (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
+    (getChangeTable as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -327,8 +319,8 @@ describe("Test handlers", () => {
       },
     } as unknown as Event;
 
-    getActualTable.mockImplementation(() => [5, 5]);
-    getChangeTable.mockImplementation(() => [
+    (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
+    (getChangeTable as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
@@ -345,7 +337,7 @@ describe("Test handlers", () => {
   });
 
   test("Test function tick", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -363,8 +355,8 @@ describe("Test handlers", () => {
   });
 
   test("Time stop and cell without", () => {
-    getCountAliveCells.mockImplementation(() => 1);
-    toEqualArr.mockImplementation(() => true);
+    (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 1);
+    (toEqualArr as unknown as jest.Mock).mockImplementation(() => true);
 
     tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
 
@@ -372,8 +364,8 @@ describe("Test handlers", () => {
   });
 
   test("Go new iteration", () => {
-    getCountAliveCells.mockImplementation(() => 1);
-    toEqualArr.mockImplementation(() => false);
+    (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 1);
+    (toEqualArr as unknown as jest.Mock).mockImplementation(() => false);
 
     tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
 
@@ -381,14 +373,14 @@ describe("Test handlers", () => {
   });
 
   test("New time interval", () => {
-    getInterval.mockImplementation(() => 1000);
+    (getInterval as unknown as jest.Mock).mockImplementation(() => 1000);
     tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
 
     expect(getUpdateArray).toHaveBeenCalled();
   });
 
   test("New time interval", () => {
-    getInterval.mockImplementation(() => 5000);
+    (getInterval as unknown as jest.Mock).mockImplementation(() => 5000);
     tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
 
     expect(getUpdateArray).toHaveBeenCalled();

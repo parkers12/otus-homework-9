@@ -28,7 +28,7 @@ describe("getAliveList", () => {
 
 describe("counterAroundCell", () => {
   test("Count the number of living neighbors at zero", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -40,7 +40,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 1, 1", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 1, 0, 0, 0],
       [0, 0, 1, 0, 0],
       [0, 1, 0, 0, 0],
@@ -52,7 +52,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 1, 1", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [1, 1, 1, 0, 0],
       [1, 0, 1, 0, 0],
       [1, 1, 1, 0, 0],
@@ -64,7 +64,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 0, 0", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 1, 0, 0, 0],
       [1, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -76,7 +76,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 0, 1", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [1, 0, 1, 0, 0],
       [0, 0, 0, 0, 0],
@@ -88,7 +88,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 1, 1", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 1, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0],
@@ -100,7 +100,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 1, 2", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 1, 0, 0, 0],
       [0, 1, 0, 0, 0],
       [0, 0, 1, 0, 0],
@@ -112,7 +112,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 2, 1", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [1, 1, 1, 0, 0],
       [1, 0, 1, 0, 0],
@@ -124,7 +124,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 4, 1", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -136,7 +136,7 @@ describe("counterAroundCell", () => {
   });
 
   test("Count the number of living neighbors in cell 1, 4", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 1],
       [0, 0, 0, 1, 0],
       [0, 0, 0, 0, 1],
@@ -150,7 +150,7 @@ describe("counterAroundCell", () => {
 
 describe("setConditionCell", () => {
   test("Cell state change", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [1, 0, 0],
       [0, 0, 0],
       [0, 0, 0],
@@ -173,7 +173,7 @@ describe("setConditionCell", () => {
   });
 
   test("Cell state change", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 1, 0],
       [0, 1, 1],
       [0, 0, 0],
@@ -196,7 +196,7 @@ describe("setConditionCell", () => {
   });
 
   test("Cell state change", () => {
-    getStorageArrayAlive.mockImplementation(() => [
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 1, 0],
       [1, 0, 0],
       [0, 1, 0],
