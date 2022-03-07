@@ -1,4 +1,5 @@
 .main {
+  padding: 0 $sp * 10;
 }
 
 .wrapper {
@@ -111,6 +112,9 @@
 .input {
   &[type="number"] {
     width: $sp * 30;
+  }
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 

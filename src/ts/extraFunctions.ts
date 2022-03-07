@@ -1,6 +1,10 @@
 import config from "./config";
-
-import { getStorageArrayAlive } from "./storage";
+import {
+  storageConfig,
+  storageArrayAliveSave,
+  getStorageArrayAlive,
+  getStorageConfig
+} from "./storage";
 
 export function getAliveList(row: number, col: number): number[][] {
   const aliveListEmpty: number[][] = [];
@@ -18,7 +22,9 @@ export function counterAroundCell(
   colCurent: number
 ): number {
   const aliveCell = getStorageArrayAlive();
-  let sum: number = 0;
+  const configData = getStorageConfig();
+
+  let sum = 0;
   let rowStart: number;
   let rowFinish: number;
   let colStart: number;
@@ -30,8 +36,8 @@ export function counterAroundCell(
     rowStart = rowCurent - 1;
   }
 
-  if (rowCurent + 1 >= config.fields[0].value) {
-    rowFinish = config.fields[0].value - 1;
+  if (rowCurent + 1 >= configData.valueRows) {
+    rowFinish = rowCurent;
   } else {
     rowFinish = rowCurent + 1;
   }
@@ -42,8 +48,8 @@ export function counterAroundCell(
     colStart = colCurent - 1;
   }
 
-  if (colCurent + 1 >= config.fields[1].value) {
-    colFinish = config.fields[1].value - 1;
+  if (colCurent + 1 >= configData.valueCols) {
+    colFinish = colCurent;
   } else {
     colFinish = colCurent + 1;
   }
@@ -79,4 +85,9 @@ export function setConditionCell(
     }
   }
   return arrayAliveNew;
+}
+
+export function getInterval(value: number): number {
+  const intervalArray = [2500, 2000, 1500, 1000, 500];
+  return intervalArray[value - 1];
 }

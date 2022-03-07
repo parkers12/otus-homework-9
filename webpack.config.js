@@ -40,16 +40,14 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
   ],
+  devtool: "eval-source-map",
   module: {
     rules: [
       {
-        test: /\.[tj]sx?$/,
+        test: /\.[tj]s?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
-          },
         },
       },
       {

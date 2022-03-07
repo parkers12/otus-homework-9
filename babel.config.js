@@ -1,7 +1,16 @@
-module.exports = {
+module.exports = (api) => ({
+  plugins: ["@babel/plugin-transform-runtime"],
   presets: [
-    ["@babel/preset-env", { targets: { node: "current" } }],
+    [
+      "@babel/preset-env",
+      {
+        useBuiltIns: "entry",
+        // caller.target will be the same as the target option from webpack
+        targets: api.caller((caller) => caller && caller.target === "node")
+          ? { node: "current" }
+          : { chrome: "58", ie: "11" },
+      },
+    ],
     "@babel/preset-typescript",
   ],
-  plugins: ["@babel/plugin-transform-runtime"],
-};
+});

@@ -1,11 +1,14 @@
-import config from "./config";
 import {
   getAliveList,
   counterAroundCell,
   setConditionCell,
 } from "./extraFunctions";
 
-import { storageArrayAliveSave, getStorageArrayAlive } from "./storage";
+import {
+  storageArrayAliveSave,
+  getStorageArrayAlive,
+  getStorageConfig
+} from "./storage";
 
 export function getMarkupTable(
   arrayAlive: number[][],
@@ -13,7 +16,7 @@ export function getMarkupTable(
 ): void {
   const table = tbl;
   table.innerHTML = "";
-  const classes = `${config.classCell} ${config.classCellActive}`.split(" ");
+  const classes = "cell cell_alive".split(" ");
 
   for (let i = 0; i < arrayAlive.length; i += 1) {
     const tr: HTMLElement = document.createElement("tr");
@@ -43,7 +46,7 @@ export function getToggleClass(coords: string[]): void {
   const cell = document.querySelectorAll(
     `td[data-row='${coordsY}'][data-col='${coordsX}']`
   );
-  cell[0].classList.toggle(config.classCellActive);
+  cell[0].classList.toggle("cell_alive");
 }
 
 export function getNewAliveList(coordNew: string[]): number[][] {
@@ -60,15 +63,17 @@ export function getNewAliveList(coordNew: string[]): number[][] {
   return arrayNew;
 }
 
-export function clearTable(table: HTMLElement): void {
-  const cellsAlive = table.querySelectorAll(`.${config.classCellActive}`);
+export function clearTable(): void {
+  const table = document.querySelector("#table") as HTMLTableElement;
+  const cellsAlive = table.querySelectorAll("td.cell_alive");
   for (let i = 0; i < cellsAlive.length; i += 1) {
-    cellsAlive[i].classList.remove(config.classCellActive);
+    cellsAlive[i].classList.remove("cell_alive");
   }
 }
 
-export function getCountAliveCells(table: HTMLElement): number {
-  return table.querySelectorAll(`.${config.classCellActive}`).length;
+export function getCountAliveCells(): number {
+  const table = document.querySelector("#table") as HTMLTableElement;
+  return table.querySelectorAll("td.cell_alive").length;
 }
 
 export function handleButton(
@@ -80,6 +85,18 @@ export function handleButton(
     button.disabled = true;
   } else {
     button.disabled = false;
+  }
+}
+
+export function handleInput(
+  isFisabled: boolean,
+  int: HTMLInputElement
+): void {
+  const input = int;
+  if (isFisabled) {
+    input.disabled = true;
+  } else {
+    input.disabled = false;
   }
 }
 
@@ -100,9 +117,9 @@ export function getUpdateTable(row: number, col: number): void {
       const cell = document.querySelectorAll(
         `td[data-row='${i}'][data-col='${j}']`
       );
-      cell[0].classList.remove(config.classCellActive);
+      cell[0].classList.remove("cell_alive");
       if (arrayAlive[i][j] === 1) {
-        cell[0].classList.add(config.classCellActive);
+        cell[0].classList.add("cell_alive");
       }
     }
   }
@@ -120,22 +137,49 @@ export function getChangeTable(
   newValue: number,
   isRow: boolean
 ): number[][] {
+  let newValueNum = newValue;
   const arrayAlive = getStorageArrayAlive();
+  // console.log(arrayAlive, row, col, newValueNum, isRow);
+  const configData = getStorageConfig();
   if (isRow) {
-    if (row > newValue) {
-      arrayAlive.splice(-1);
+    const rowField = document.getElementById("rowField") as HTMLInputElement;
+    if (row >= newValueNum) {
+      if (newValueNum < configData.minRows) {
+        newValueNum = configData.minRows;
+        rowField.value = String(newValueNum);
+      }
+      const delCell = row - newValueNum;
+      arrayAlive.splice(arrayAlive.length - delCell, delCell);
     } else {
-      arrayAlive.push([]);
-      for (let i = 0; i < col; i += 1) {
-        arrayAlive[newValue - 1].push(0);
+      if (newValueNum > configData.maxRows) {
+        newValueNum = configData.maxRows;
+        rowField.value = String(newValueNum);
+      }
+      for (let j = row; j < newValueNum; j += 1) {
+        arrayAlive.push([]);
+        for (let i = 0; i < col; i += 1) {
+          arrayAlive[j].push(0);
+        }
       }
     }
   } else {
+    const colField = document.getElementById("colField") as HTMLInputElement;
     for (let i = 0; i < row; i += 1) {
-      if (col > newValue) {
-        arrayAlive[i].splice(-1);
+      if (col >= newValueNum) {
+        if (newValueNum < configData.minCols) {
+          newValueNum = configData.minCols;
+          colField.value = String(newValueNum);
+        }
+        const delCell = col - newValueNum;
+        arrayAlive[i].splice(arrayAlive[i].length - delCell, delCell);
       } else {
-        arrayAlive[i].push(0);
+        if (newValueNum > configData.maxCols) {
+          newValueNum = configData.maxCols;
+          colField.value = String(newValueNum);
+        }
+        for (let j = col; j < newValueNum; j += 1) {
+          arrayAlive[i].push(0);
+        }
       }
     }
   }
@@ -150,6 +194,7 @@ export function getActualTable(table: HTMLTableElement): number[] {
   return [Number(numRows), Number(numCols)];
 }
 
-export function getInterval(range: HTMLInputElement): number {
-  return Number(range.value) * 1000;
+export function getInterval(): number {
+  const configData = getStorageConfig();
+  return configData.interval;
 }

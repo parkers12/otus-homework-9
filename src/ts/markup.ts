@@ -1,8 +1,11 @@
-import { getAliveList } from "./extraFunctions";
+import { getAliveList, getInterval } from "./extraFunctions";
 import { getMarkupTable } from "./control";
+import { getStorageConfig } from "./storage";
 import { errorMessage } from "./errorMessage";
 
-function markup(elem: HTMLElement, config: any): void {
+function markup(elem: HTMLElement): void {
+  const configData = getStorageConfig();
+
   const wrapper = document.createElement("div") as HTMLDivElement;
   elem.appendChild(wrapper).setAttribute("class", "wrapper");
   const content: HTMLElement | null = document.querySelector(".wrapper")!;
@@ -12,7 +15,7 @@ function markup(elem: HTMLElement, config: any): void {
 
   const title: HTMLElement = document.createElement("h1");
   header.appendChild(title).setAttribute("class", "title");
-  title.innerHTML = config.title;
+  title.innerHTML = "Game of Life";
 
   const main: HTMLElement = document.createElement("main");
   content.appendChild(main).setAttribute("class", "main");
@@ -24,60 +27,97 @@ function markup(elem: HTMLElement, config: any): void {
   main.appendChild(form).setAttribute("class", "form");
   form.setAttribute("id", "form");
 
-  const countFilds = config.fields.length;
+  // Row input
+  const formItemRows: HTMLElement = document.createElement("div");
+  form.appendChild(formItemRows).setAttribute("class", "form-item");
 
-  for (let i = 0; i < countFilds; i += 1) {
-    const formItem: HTMLElement = document.createElement("div");
-    form.appendChild(formItem).setAttribute("class", "form-item");
+  const rowsField: HTMLElement = document.createElement("input");
+  formItemRows.appendChild(rowsField).setAttribute("id", "rowField");
+  rowsField.setAttribute("class", "input");
+  rowsField.setAttribute("type", "number");
 
-    const colField: HTMLElement = document.createElement(
-      config.fields[i].field
-    );
-    formItem.appendChild(colField).setAttribute("id", config.fields[i].id);
-    colField.setAttribute("class", config.fields[i].class);
-    colField.setAttribute("type", config.fields[i].type);
+  const rowsLabel: HTMLElement = document.createElement("label");
+  formItemRows.appendChild(rowsLabel).setAttribute("for", "rowField");
+  rowsLabel.setAttribute("class", "label");
+  rowsLabel.innerHTML = "Rows";
 
-    const label: HTMLElement = document.createElement("label");
-    formItem.appendChild(label).setAttribute("for", config.fields[i].id);
-    label.setAttribute("class", "label");
-    label.innerHTML = config.fields[i].label;
+  formItemRows.appendChild(rowsField).setAttribute("name", "rowField");
+  rowsField.setAttribute("value", String(configData.valueRows));
+  rowsField.setAttribute("min", String(configData.minRows));
+  rowsField.setAttribute("max", String(configData.maxRows));
+  rowsField.setAttribute("step", String(configData.stepRows));
+  rowsField.setAttribute("oninput", "replacer(this)");
 
-    const { min, max, step } = config.fields[i];
-    formItem.appendChild(colField).setAttribute("name", config.fields[i].name);
-    colField.setAttribute("value", String(config.fields[i].value));
-    colField.setAttribute("min", String(min));
-    colField.setAttribute("max", String(max));
-    colField.setAttribute("step", String(step));
+  // Col input
+  const formItemCols: HTMLElement = document.createElement("div");
+  form.appendChild(formItemCols).setAttribute("class", "form-item");
 
-    if (config.fields[i].type === "number") {
-      colField.setAttribute("oninput", "replacer(this)");
+  const colField: HTMLElement = document.createElement("input");
+  formItemCols.appendChild(colField).setAttribute("id", "colField");
+  colField.setAttribute("class", "input");
+  colField.setAttribute("type", "number");
+
+  const colsLabel: HTMLElement = document.createElement("label");
+  formItemCols.appendChild(colsLabel).setAttribute("for", "colField");
+  colsLabel.setAttribute("class", "label");
+  colsLabel.innerHTML = "Cols";
+
+  formItemCols.appendChild(colField).setAttribute("name", "colField");
+  colField.setAttribute("value", String(configData.valueCols));
+  colField.setAttribute("min", String(configData.minCols));
+  colField.setAttribute("max", String(configData.maxCols));
+  colField.setAttribute("step", String(configData.stepCols));
+  colField.setAttribute("oninput", "replacer(this)");
+  
+  // Range input
+  const formItemRange: HTMLElement = document.createElement("div");
+  form.appendChild(formItemRange).setAttribute("class", "form-item");
+
+  const rangeField: HTMLElement = document.createElement("input");
+  formItemRange.appendChild(rangeField).setAttribute("id", "range");
+  rangeField.setAttribute("class", "range");
+  rangeField.setAttribute("type", "range");
+
+  const rangeLabel: HTMLElement = document.createElement("label");
+  formItemRange.appendChild(rangeLabel).setAttribute("for", "range");
+  rangeLabel.setAttribute("class", "label");
+  rangeLabel.innerHTML = "Speed";
+
+  formItemRange.appendChild(rangeField).setAttribute("name", "tickmarks");
+  rangeField.setAttribute("value", String(configData.valueRange));
+  rangeField.setAttribute("min", String(configData.minRange));
+  rangeField.setAttribute("max", String(configData.maxRange));
+  rangeField.setAttribute("step", String(configData.stepRange));
+
+  formItemRange.appendChild(rangeField).setAttribute("list", "tickmarks");
+  const datalist: HTMLElement = document.createElement("datalist");
+  formItemRange.appendChild(datalist).setAttribute("id", "tickmarks");
+
+  for (
+    let j = configData.minRange;
+    j <= configData.maxRange;
+    j += configData.stepRange
+  ) {
+    const option: HTMLElement = document.createElement("option");
+    datalist.appendChild(option).setAttribute("value", String(j));
+    option.setAttribute("label", String(j));
+    const intervalValue = getInterval(j);
+    if (intervalValue === configData.interval) {
+      option.setAttribute("selected","selected");
     }
-
-    if (config.fields[i].type === "range") {
-      formItem
-        .appendChild(colField)
-        .setAttribute("list", config.fields[i].name);
-      const datalist: HTMLElement = document.createElement("datalist");
-      formItem.appendChild(datalist).setAttribute("id", config.fields[i].name);
-      for (let j = min; j <= max; j += step) {
-        const option: HTMLElement = document.createElement("option");
-        datalist.appendChild(option).setAttribute("value", String(j));
-        option.setAttribute("label", String(j));
-        option.innerHTML = String(j);
-      }
-    }
+    option.innerHTML = String(j);
   }
 
-  if (config.fields[0].value > 2 || config.fields[1].value > 2) {
-    const table = document.createElement(config.classTable) as HTMLTableElement;
-    main.appendChild(table).setAttribute("class", config.classTable);
-    table.setAttribute("id", config.classTable);
+  if (configData.valueRows > 2 || configData.valueCols > 2) {
+    const table = document.createElement("table") as HTMLTableElement;
+    main.appendChild(table).setAttribute("class", "table");
+    table.setAttribute("id", "table");
     table.setAttribute("border", "0");
     table.setAttribute("cellpadding", "0");
     table.setAttribute("cellspacing", "0");
     const aliveList: number[][] = getAliveList(
-      config.fields[0].value,
-      config.fields[1].value
+      configData.valueRows,
+      configData.valueCols
     );
     getMarkupTable(aliveList, table);
   } else {
@@ -87,16 +127,30 @@ function markup(elem: HTMLElement, config: any): void {
   const control: HTMLElement = document.createElement("div");
   main.appendChild(control).setAttribute("class", "control");
   control.setAttribute("id", "control");
-  for (let i = 0; i < countFilds; i += 1) {
-    const button: HTMLElement = document.createElement(config.button[i].field);
-    control.appendChild(button).setAttribute("type", config.button[i].field);
-    button.setAttribute("id", config.button[i].id);
-    button.setAttribute("class", config.button[i].class);
-    if (config.button[i].disabled) {
-      button.setAttribute("disabled", "disabled");
-    }
-    button.innerHTML = config.button[i].text;
-  }
+
+  // Button start
+  const buttonStart: HTMLElement = document.createElement("button");
+  control.appendChild(buttonStart).setAttribute("type", "button");
+  buttonStart.setAttribute("id", "buttonStart");
+  buttonStart.setAttribute("class", "button");
+  buttonStart.setAttribute("disabled", "disabled");
+  buttonStart.innerHTML = "Start";
+  
+  // Button stop
+  const buttonStop: HTMLElement = document.createElement("button");
+  control.appendChild(buttonStop).setAttribute("type", "button");
+  buttonStop.setAttribute("id", "buttonStop");
+  buttonStop.setAttribute("class", "button");
+  buttonStop.setAttribute("disabled", "disabled");
+  buttonStop.innerHTML = "Stop";
+
+  // Button clear
+  const buttonClear: HTMLElement = document.createElement("button");
+  control.appendChild(buttonClear).setAttribute("type", "button");
+  buttonClear.setAttribute("id", "buttonClear");
+  buttonClear.setAttribute("class", "button");
+  buttonClear.setAttribute("disabled", "disabled");
+  buttonClear.innerHTML = "Clear";
 }
 
 export default markup;
