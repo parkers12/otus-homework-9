@@ -1,5 +1,4 @@
 import config from "./config";
-import { getAliveList } from "./extraFunctions";
 
 type TConfig = {
   valueRows: number,
@@ -53,46 +52,4 @@ export function getStorageConfig(): TConfig  {
     storageConfig(configData);
   }
   return configData;
-}
-
-export function createStorage(): void {
-  const configDataActual = getStorageConfig();
-  if(configDataActual === null) {
-    const configDt = {
-      valueRows: config.valueRows,
-      minRows: config.minRows,
-      maxRows: config.maxRows,
-      stepRows: config.stepRows,
-      valueCols: config.valueCols,
-      minCols: config.minCols,
-      maxCols: config.maxCols,
-      stepCols: config.stepCols,
-      valueRange: config.valueRange,
-      minRange: config.minRange,
-      maxRange: config.maxRange,
-      stepRange: config.stepRange,
-      interval: config.interval
-    };
-    storageConfig(configDt);
-  }
-
-  let aliveStorage = getStorageArrayAlive();
-  if(aliveStorage === null) {
-    storageArrayAliveSave(getAliveList(config.valueRows, config.valueCols));
-    aliveStorage = getStorageArrayAlive();
-  }
-
-  const rows = Number(aliveStorage.length);
-  const cols = Number(aliveStorage[0].length);
-
-  if(
-    rows !== Number(configDataActual.valueRows) ||
-    cols !== Number(configDataActual.valueCols)
-  ) {
-    console.log("222");
-    localStorage.removeItem('arrayAlive');
-    const arrayAlive = 
-      getAliveList(configDataActual.valueRows, configDataActual.valueCols);
-    storageArrayAliveSave(arrayAlive);
-  }
 }

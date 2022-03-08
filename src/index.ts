@@ -1,5 +1,5 @@
 import "./styles/styles.scss";
-import { createStorage } from "./ts/storage";
+import { createStorage } from "./ts/main";
 import markup from "./ts/markup";
 import App from "./ts/handlers";
 
