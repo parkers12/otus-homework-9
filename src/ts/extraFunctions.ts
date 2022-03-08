@@ -1,7 +1,4 @@
-import config from "./config";
 import {
-  storageConfig,
-  storageArrayAliveSave,
   getStorageArrayAlive,
   getStorageConfig
 } from "./storage";
