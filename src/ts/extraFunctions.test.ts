@@ -2,7 +2,7 @@ import {
   getAliveList,
   counterAroundCell,
   setConditionCell,
-  getInterval
+  getInterval,
 } from "./extraFunctions";
 
 import { getStorageArrayAlive } from "./storage";
@@ -244,7 +244,7 @@ describe("setConditionCell", () => {
     expect(arrayAlive[1][1]).toEqual(0);
 
     const arrayAliveNew = setConditionCell(arrayCounters, 3, 3);
-    
+
     expect(arrayAliveNew[1][1]).toEqual(1);
   });
 

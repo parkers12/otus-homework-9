@@ -68,7 +68,7 @@ function markup(elem: HTMLElement): void {
   colField.setAttribute("max", String(configData.maxCols));
   colField.setAttribute("step", String(configData.stepCols));
   colField.setAttribute("oninput", "replacer(this)");
-  
+
   // Range input
   const formItemRange: HTMLElement = document.createElement("div");
   form.appendChild(formItemRange).setAttribute("class", "form-item");
@@ -103,7 +103,7 @@ function markup(elem: HTMLElement): void {
     option.setAttribute("label", String(j));
     const intervalValue = getInterval(j);
     if (intervalValue === configData.interval) {
-      option.setAttribute("selected","selected");
+      option.setAttribute("selected", "selected");
     }
     option.innerHTML = String(j);
   }
@@ -135,7 +135,7 @@ function markup(elem: HTMLElement): void {
   buttonStart.setAttribute("class", "button");
   buttonStart.setAttribute("disabled", "disabled");
   buttonStart.innerHTML = "Start";
-  
+
   // Button stop
   const buttonStop: HTMLElement = document.createElement("button");
   control.appendChild(buttonStop).setAttribute("type", "button");

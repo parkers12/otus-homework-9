@@ -15,10 +15,7 @@ import {
   getInterval,
 } from "./control";
 
-import {
-  storageArrayAliveSave,
-  getStorageArrayAlive
-} from "./storage";
+import { storageArrayAliveSave, getStorageArrayAlive } from "./storage";
 
 jest.mock("./storage", () => {
   const originalModule = jest.requireActual("./storage");
@@ -257,8 +254,9 @@ describe("Test functions", () => {
     });
 
     describe("handleButton", () => {
-      const buttonClear =
-        document.getElementById("buttonClear") as HTMLButtonElement;
+      const buttonClear = document.getElementById(
+        "buttonClear"
+      ) as HTMLButtonElement;
 
       test("Change the state of the button to active", () => {
         expect(buttonClear.disabled).toBe(true);
@@ -274,8 +272,7 @@ describe("Test functions", () => {
     });
 
     describe("handleInput", () => {
-      const colField =
-        document.getElementById("colField") as HTMLInputElement;
+      const colField = document.getElementById("colField") as HTMLInputElement;
 
       test("Change the state of the input to active", () => {
         expect(colField.disabled).toBe(false);
@@ -397,13 +394,13 @@ describe("Test functions", () => {
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0],
         ];
 
         const arrAfter = [
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0],
         ];
 
         expect(arrBefore.length).toEqual(5);
@@ -417,7 +414,7 @@ describe("Test functions", () => {
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0],
         ];
 
         const arrAfter = [
@@ -440,7 +437,7 @@ describe("Test functions", () => {
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0],
         ];
 
         expect(arrBefore.length).toEqual(5);
@@ -454,7 +451,7 @@ describe("Test functions", () => {
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0],
         ];
 
         const arrAfter = [
@@ -462,7 +459,7 @@ describe("Test functions", () => {
           [0, 0, 0],
           [0, 0, 0],
           [0, 0, 0],
-          [0, 0, 0]
+          [0, 0, 0],
         ];
 
         expect(arrBefore[0].length).toEqual(5);
@@ -476,7 +473,7 @@ describe("Test functions", () => {
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0],
         ];
 
         const arrAfter = [
@@ -484,7 +481,7 @@ describe("Test functions", () => {
           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ];
 
         expect(arrBefore[0].length).toEqual(5);
@@ -506,7 +503,7 @@ describe("Test functions", () => {
         );
         const rowNum = 2;
         const colNum = 2;
-        
+
         clearTable();
 
         const cellBefore = table.querySelectorAll(
@@ -601,7 +598,7 @@ describe("Test functions", () => {
       ];
 
       const defaultExportResult = getUpdateArray(5, 5);
-      
+
       expect(defaultExportResult).toEqual(arrayAliveAfter);
     });
   });

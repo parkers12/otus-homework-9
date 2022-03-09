@@ -1,11 +1,8 @@
-import {
-  storageArrayAliveSave,
-  getStorageArrayAlive
-} from "./storage";
+import { storageArrayAliveSave, getStorageArrayAlive } from "./storage";
 
 describe("Test storage", () => {
   test("storageArrayAliveSave", () => {
-    localStorage.removeItem('arrayAlive');
+    localStorage.removeItem("arrayAlive");
 
     const emptyArr = JSON.parse(localStorage.getItem("arrayAlive") as string);
 
@@ -38,7 +35,7 @@ describe("Test storage", () => {
     localStorage.setItem("arrayAlive", JSON.stringify(arrayAlive));
 
     const arr = getStorageArrayAlive();
-    
+
     expect(arrayAlive).toStrictEqual(arr);
   });
 });

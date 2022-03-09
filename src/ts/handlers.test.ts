@@ -134,16 +134,15 @@ describe("Handlers application", () => {
         </div>
     `;
 
-  const table =
-    document.getElementById("table") as HTMLTableElement;
-  const buttonStart =
-    document.getElementById("buttonStart") as HTMLButtonElement;
-  const buttonStop =
-    document.getElementById("buttonStop") as HTMLButtonElement;
-  const buttonClear =
-    document.getElementById("buttonClear",) as HTMLButtonElement;
-  const rangeField =
-    document.getElementById("range") as HTMLInputElement;
+  const table = document.getElementById("table") as HTMLTableElement;
+  const buttonStart = document.getElementById(
+    "buttonStart"
+  ) as HTMLButtonElement;
+  const buttonStop = document.getElementById("buttonStop") as HTMLButtonElement;
+  const buttonClear = document.getElementById(
+    "buttonClear"
+  ) as HTMLButtonElement;
+  const rangeField = document.getElementById("range") as HTMLInputElement;
 
   test("handlerTableClick", () => {
     App();

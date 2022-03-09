@@ -8,10 +8,7 @@ import {
 
 import { getAliveList } from "./extraFunctions";
 
-import {
-  storageArrayAliveSave,
-  getStorageConfig
-} from "./storage";
+import { storageArrayAliveSave, getStorageConfig } from "./storage";
 
 const configData = getStorageConfig();
 
@@ -24,11 +21,13 @@ export default function App() {
   const form = document.getElementById("form") as HTMLElement;
   const rowField = document.getElementById("rowField") as HTMLInputElement;
   const colField = document.getElementById("colField") as HTMLInputElement;
-  const buttonStart =
-    document.getElementById("buttonStart") as HTMLButtonElement;
+  const buttonStart = document.getElementById(
+    "buttonStart"
+  ) as HTMLButtonElement;
   const buttonStop = document.getElementById("buttonStop") as HTMLButtonElement;
-  const buttonClear =
-    document.getElementById("buttonClear") as HTMLButtonElement;
+  const buttonClear = document.getElementById(
+    "buttonClear"
+  ) as HTMLButtonElement;
   const rangeField = document.getElementById("range") as HTMLInputElement;
 
   table.addEventListener("click", (event) =>

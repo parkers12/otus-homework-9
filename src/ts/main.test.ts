@@ -10,10 +10,7 @@ import {
   createStorage,
 } from "./main";
 
-import {
-  getAliveList,
-  getInterval
-} from "./extraFunctions";
+import { getAliveList, getInterval } from "./extraFunctions";
 
 import {
   getMarkupTable,
@@ -27,7 +24,7 @@ import {
   getUpdateTable,
   toEqualArr,
   getChangeTable,
-  getActualTable
+  getActualTable,
 } from "./control";
 
 import {
@@ -76,7 +73,7 @@ jest.mock("./extraFunctions", () => {
     __esModule: true,
     ...originalModule,
     getAliveList: jest.fn(),
-    getInterval: jest.fn()
+    getInterval: jest.fn(),
   };
 });
 
@@ -204,20 +201,17 @@ describe("Test handlers", () => {
   const row: number = config.valueRows;
   const col: number = config.valueCols;
 
-  const table =
-    document.getElementById("table") as HTMLTableElement;
-  const buttonStart =
-    document.getElementById("buttonStart") as HTMLButtonElement;
-  const buttonStop =
-    document.getElementById("buttonStop") as HTMLButtonElement;
-  const buttonClear =
-    document.getElementById("buttonClear") as HTMLButtonElement;
-  const rowField =
-    document.getElementById("rowField") as HTMLInputElement;
-  const colField =
-    document.getElementById("colField") as HTMLInputElement;
-  const rangeField =
-    document.getElementById("range") as HTMLInputElement;
+  const table = document.getElementById("table") as HTMLTableElement;
+  const buttonStart = document.getElementById(
+    "buttonStart"
+  ) as HTMLButtonElement;
+  const buttonStop = document.getElementById("buttonStop") as HTMLButtonElement;
+  const buttonClear = document.getElementById(
+    "buttonClear"
+  ) as HTMLButtonElement;
+  const rowField = document.getElementById("rowField") as HTMLInputElement;
+  const colField = document.getElementById("colField") as HTMLInputElement;
+  const rangeField = document.getElementById("range") as HTMLInputElement;
 
   test("Click on a cell table", () => {
     const mEvent: any = {
@@ -260,23 +254,21 @@ describe("Test handlers", () => {
     (toEqualArr as unknown as jest.Mock).mockImplementation(() => 1);
     (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 0);
 
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-      {
-        valueRows: 5,
-        minRows: 3,
-        maxRows: 20,
-        stepRows: 1,
-        valueCols: 5,
-        minCols: 3,
-        maxCols: 20,
-        stepCols: 1,
-        valueRange: 3,
-        minRange: 1,
-        maxRange: 5,
-        stepRange: 1,
-        interval: 1000,
-      })
-    );
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+      valueRows: 5,
+      minRows: 3,
+      maxRows: 20,
+      stepRows: 1,
+      valueCols: 5,
+      minCols: 3,
+      maxCols: 20,
+      stepCols: 1,
+      valueRange: 3,
+      minRange: 1,
+      maxRange: 5,
+      stepRange: 1,
+      interval: 1000,
+    }));
 
     jest.runOnlyPendingTimers();
 
@@ -318,23 +310,21 @@ describe("Test handlers", () => {
 
     (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
 
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-      {
-        valueRows: 5,
-        minRows: 3,
-        maxRows: 20,
-        stepRows: 1,
-        valueCols: 5,
-        minCols: 3,
-        maxCols: 20,
-        stepCols: 1,
-        valueRange: 3,
-        minRange: 1,
-        maxRange: 5,
-        stepRange: 1,
-        interval: 1000,
-      })
-    );
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+      valueRows: 5,
+      minRows: 3,
+      maxRows: 20,
+      stepRows: 1,
+      valueCols: 5,
+      minCols: 3,
+      maxCols: 20,
+      stepCols: 1,
+      valueRange: 3,
+      minRange: 1,
+      maxRange: 5,
+      stepRange: 1,
+      interval: 1000,
+    }));
 
     (getChangeTable as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
@@ -373,23 +363,21 @@ describe("Test handlers", () => {
 
     (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
 
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-      {
-        valueRows: 5,
-        minRows: 3,
-        maxRows: 20,
-        stepRows: 1,
-        valueCols: 5,
-        minCols: 3,
-        maxCols: 20,
-        stepCols: 1,
-        valueRange: 3,
-        minRange: 1,
-        maxRange: 5,
-        stepRange: 1,
-        interval: 1000,
-      })
-    );
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+      valueRows: 5,
+      minRows: 3,
+      maxRows: 20,
+      stepRows: 1,
+      valueCols: 5,
+      minCols: 3,
+      maxCols: 20,
+      stepCols: 1,
+      valueRange: 3,
+      minRange: 1,
+      maxRange: 5,
+      stepRange: 1,
+      interval: 1000,
+    }));
 
     (getChangeTable as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0, 0],
@@ -427,23 +415,21 @@ describe("Test handlers", () => {
 
     (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
 
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-      {
-        valueRows: 5,
-        minRows: 3,
-        maxRows: 20,
-        stepRows: 1,
-        valueCols: 5,
-        minCols: 3,
-        maxCols: 20,
-        stepCols: 1,
-        valueRange: 3,
-        minRange: 1,
-        maxRange: 5,
-        stepRange: 1,
-        interval: 1500,
-      })
-    );
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+      valueRows: 5,
+      minRows: 3,
+      maxRows: 20,
+      stepRows: 1,
+      valueCols: 5,
+      minCols: 3,
+      maxCols: 20,
+      stepCols: 1,
+      valueRange: 3,
+      minRange: 1,
+      maxRange: 5,
+      stepRange: 1,
+      interval: 1500,
+    }));
 
     (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 0);
 
@@ -477,23 +463,21 @@ describe("Test handlers", () => {
 
     (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
 
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-      {
-        valueRows: 5,
-        minRows: 3,
-        maxRows: 20,
-        stepRows: 1,
-        valueCols: 5,
-        minCols: 3,
-        maxCols: 20,
-        stepCols: 1,
-        valueRange: 3,
-        minRange: 1,
-        maxRange: 5,
-        stepRange: 1,
-        interval: 1500,
-      })
-    );
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+      valueRows: 5,
+      minRows: 3,
+      maxRows: 20,
+      stepRows: 1,
+      valueCols: 5,
+      minCols: 3,
+      maxCols: 20,
+      stepCols: 1,
+      valueRange: 3,
+      minRange: 1,
+      maxRange: 5,
+      stepRange: 1,
+      interval: 1500,
+    }));
 
     rangeField.value = "5";
 
@@ -519,26 +503,24 @@ describe("Test handlers", () => {
       [0, 0, 0, 0, 0],
     ]);
 
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-      {
-        valueRows: 5,
-        minRows: 3,
-        maxRows: 20,
-        stepRows: 1,
-        valueCols: 5,
-        minCols: 3,
-        maxCols: 20,
-        stepCols: 1,
-        valueRange: 3,
-        minRange: 1,
-        maxRange: 5,
-        stepRange: 1,
-        interval: 1000,
-      })
-    );
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+      valueRows: 5,
+      minRows: 3,
+      maxRows: 20,
+      stepRows: 1,
+      valueCols: 5,
+      minCols: 3,
+      maxCols: 20,
+      stepCols: 1,
+      valueRange: 3,
+      minRange: 1,
+      maxRange: 5,
+      stepRange: 1,
+      interval: 1000,
+    }));
 
     (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 0);
-    
+
     tick(
       table,
       rangeField,
@@ -622,10 +604,10 @@ describe("Test handlers", () => {
   });
 
   test("createStorage", () => {
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(
-      () => null);
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => null);
     (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(
-      () => null);
+      () => null
+    );
 
     createStorage();
 
@@ -633,15 +615,13 @@ describe("Test handlers", () => {
     expect(getStorageArrayAlive).toHaveBeenCalled();
     expect(storageArrayAliveSave).toHaveBeenCalled();
     expect(getAliveList).toHaveBeenCalled();
-
   });
 
   test("createStorage", () => {
-    localStorage.removeItem('arrayAlive');
-    localStorage.removeItem('config');
+    localStorage.removeItem("arrayAlive");
+    localStorage.removeItem("config");
     const emptyArr = getStorageArrayAlive();
-    const emptyConf = 
-    JSON.parse(localStorage.getItem("config") as string);
+    const emptyConf = JSON.parse(localStorage.getItem("config") as string);
     expect(emptyArr).toBe(null);
     expect(emptyConf).toBe(null);
     const arrayAlive = [
@@ -662,32 +642,30 @@ describe("Test handlers", () => {
 
     localStorage.setItem("arrayAlive", JSON.stringify(arrayAlive));
 
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-      {
-        valueRows: 5,
-        minRows: 3,
-        maxRows: 20,
-        stepRows: 1,
-        valueCols: 5,
-        minCols: 3,
-        maxCols: 20,
-        stepCols: 1,
-        valueRange: 3,
-        minRange: 1,
-        maxRange: 5,
-        stepRange: 1,
-        interval: 1000,
-      })
-    );
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+      valueRows: 5,
+      minRows: 3,
+      maxRows: 20,
+      stepRows: 1,
+      valueCols: 5,
+      minCols: 3,
+      maxCols: 20,
+      stepCols: 1,
+      valueRange: 3,
+      minRange: 1,
+      maxRange: 5,
+      stepRange: 1,
+      interval: 1000,
+    }));
 
     (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
+      [0, 0, 0, 0, 0],
     ]);
-    
+
     createStorage();
 
     const arr = getStorageArrayAlive();
@@ -696,23 +674,21 @@ describe("Test handlers", () => {
   });
 
   test("update storage", () => {
-    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-      {
-        valueRows: 5,
-        minRows: 3,
-        maxRows: 20,
-        stepRows: 1,
-        valueCols: 5,
-        minCols: 3,
-        maxCols: 20,
-        stepCols: 1,
-        valueRange: 3,
-        minRange: 1,
-        maxRange: 5,
-        stepRange: 1,
-        interval: 1000,
-      })
-    );
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+      valueRows: 5,
+      minRows: 3,
+      maxRows: 20,
+      stepRows: 1,
+      valueCols: 5,
+      minCols: 3,
+      maxCols: 20,
+      stepCols: 1,
+      valueRange: 3,
+      minRange: 1,
+      maxRange: 5,
+      stepRange: 1,
+      interval: 1000,
+    }));
 
     (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],

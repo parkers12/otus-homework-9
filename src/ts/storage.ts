@@ -1,20 +1,20 @@
 import config from "./config";
 
 type TConfig = {
-  valueRows: number,
-  minRows: number,
-  maxRows: number,
-  stepRows: number,
-  valueCols: number,
-  minCols: number,
-  maxCols: number,
-  stepCols: number,
-  valueRange: number,
-  minRange: number,
-  maxRange: number,
-  stepRange: number,
-  interval: number
-}
+  valueRows: number;
+  minRows: number;
+  maxRows: number;
+  stepRows: number;
+  valueCols: number;
+  minCols: number;
+  maxCols: number;
+  stepCols: number;
+  valueRange: number;
+  minRange: number;
+  maxRange: number;
+  stepRange: number;
+  interval: number;
+};
 
 export function storageArrayAliveSave(arrayAlive: number[][]): void {
   localStorage.setItem("arrayAlive", JSON.stringify(arrayAlive));
@@ -28,11 +28,12 @@ export function storageConfig(configData: TConfig): void {
   localStorage.setItem("config", JSON.stringify(configData));
 }
 
-export function getStorageConfig(): TConfig  {
-  let configData: TConfig =
-    JSON.parse(localStorage.getItem("config") as string);
-    
-  if(configData === null) {
+export function getStorageConfig(): TConfig {
+  let configData: TConfig = JSON.parse(
+    localStorage.getItem("config") as string
+  );
+
+  if (configData === null) {
     configData = {
       valueRows: config.valueRows,
       minRows: config.minRows,
@@ -46,9 +47,9 @@ export function getStorageConfig(): TConfig  {
       minRange: config.minRange,
       maxRange: config.maxRange,
       stepRange: config.stepRange,
-      interval: config.interval
+      interval: config.interval,
     };
-    
+
     storageConfig(configData);
   }
   return configData;

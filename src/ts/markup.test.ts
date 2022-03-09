@@ -26,23 +26,21 @@ describe("markup", () => {
   document.body.innerHTML = `<div class="app" id="app"></div>`;
   const app = document.getElementById("app") as HTMLElement;
 
-  (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-    {
-      valueRows: 5,
-      minRows: 3,
-      maxRows: 20,
-      stepRows: 1,
-      valueCols: 5,
-      minCols: 3,
-      maxCols: 20,
-      stepCols: 1,
-      valueRange: 3,
-      minRange: 1,
-      maxRange: 5,
-      stepRange: 1,
-      interval: 1000,
-    })
-  );
+  (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+    valueRows: 5,
+    minRows: 3,
+    maxRows: 20,
+    stepRows: 1,
+    valueCols: 5,
+    minCols: 3,
+    maxCols: 20,
+    stepCols: 1,
+    valueRange: 3,
+    minRange: 1,
+    maxRange: 5,
+    stepRange: 1,
+    interval: 1000,
+  }));
 
   test("Table presence on the page", () => {
     markup(app);
@@ -57,7 +55,7 @@ describe("markup", () => {
 
     test("Table size", () => {
       markup(app);
-      
+
       expect(arr.length).toBe(7);
       expect(arr[0].length).toBe(12);
     });
@@ -123,23 +121,21 @@ describe("markup", () => {
 
   describe("Test errors", () => {
     test("Missing data in config", () => {
-      (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
-        {
-          valueRows: 2,
-          minRows: 1,
-          maxRows: 20,
-          stepRows: 1,
-          valueCols: 1,
-          minCols: 1,
-          maxCols: 20,
-          stepCols: 1,
-          valueRange: 3,
-          minRange: 1,
-          maxRange: 5,
-          stepRange: 1,
-          interval: 1000,
-        })
-      );
+      (getStorageConfig as unknown as jest.Mock).mockImplementation(() => ({
+        valueRows: 2,
+        minRows: 1,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 1,
+        minCols: 1,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1000,
+      }));
 
       markup(app);
 

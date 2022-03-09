@@ -1,7 +1,4 @@
-import {
-  getStorageArrayAlive,
-  getStorageConfig
-} from "./storage";
+import { getStorageArrayAlive, getStorageConfig } from "./storage";
 
 export function getAliveList(row: number, col: number): number[][] {
   const aliveListEmpty: number[][] = [];

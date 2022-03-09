@@ -7,7 +7,7 @@ import {
 import {
   storageArrayAliveSave,
   getStorageArrayAlive,
-  getStorageConfig
+  getStorageConfig,
 } from "./storage";
 
 export function getMarkupTable(
@@ -88,10 +88,7 @@ export function handleButton(
   }
 }
 
-export function handleInput(
-  isDisabled: boolean,
-  int: HTMLInputElement
-): void {
+export function handleInput(isDisabled: boolean, int: HTMLInputElement): void {
   const input = int;
   if (isDisabled) {
     input.disabled = true;
