@@ -89,11 +89,11 @@ export function handleButton(
 }
 
 export function handleInput(
-  isFisabled: boolean,
+  isDisabled: boolean,
   int: HTMLInputElement
 ): void {
   const input = int;
-  if (isFisabled) {
+  if (isDisabled) {
     input.disabled = true;
   } else {
     input.disabled = false;
@@ -139,7 +139,6 @@ export function getChangeTable(
 ): number[][] {
   let newValueNum = newValue;
   const arrayAlive = getStorageArrayAlive();
-  // console.log(arrayAlive, row, col, newValueNum, isRow);
   const configData = getStorageConfig();
   if (isRow) {
     const rowField = document.getElementById("rowField") as HTMLInputElement;

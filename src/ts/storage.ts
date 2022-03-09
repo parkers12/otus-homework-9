@@ -24,7 +24,6 @@ export function getStorageArrayAlive(): number[][] {
   return JSON.parse(localStorage.getItem("arrayAlive") as string);
 }
 
-// {"valueRows":5,"valueCols":5,"valueRange":1,"interval":1000}
 export function storageConfig(configData: TConfig): void {
   localStorage.setItem("config", JSON.stringify(configData));
 }
@@ -49,6 +48,7 @@ export function getStorageConfig(): TConfig  {
       stepRange: config.stepRange,
       interval: config.interval
     };
+    
     storageConfig(configData);
   }
   return configData;

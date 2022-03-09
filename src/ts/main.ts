@@ -56,7 +56,6 @@ export function tick(
 ): void {
   const arr = getStorageArrayAlive();
   const configData = getStorageConfig();
-  // const newInterval = getInterval();
   const timeInterval = configData.interval;
   const row = configData.valueRows;
   const col = configData.valueCols;
@@ -84,8 +83,6 @@ export function tick(
       tick,
       timeInterval,
       table,
-      // row,
-      // col,
       rangeField,
       buttonStop,
       buttonStart,
@@ -104,8 +101,6 @@ export function getStart(
   buttonClear: HTMLButtonElement,
   rowField: HTMLInputElement,
   colField: HTMLInputElement
-  // row: number,
-  // col: number
 ): void {
   const configData = getStorageConfig();
   const interval = configData.valueRange;
@@ -119,8 +114,6 @@ export function getStart(
     tick,
     interval,
     table,
-    // row,
-    // col,
     rangeField,
     buttonStop,
     buttonStart,
@@ -173,9 +166,6 @@ export function getEditField(
   let configData = getStorageConfig();
   if (element === "rowField") {
     const dataRows = Number(rowField.value);
-    // if (configData.minRows > dataRows) {
-    //   dataRows = configData.minRows;
-    // }
     aliveCell = getChangeTable(rowActual, colActual, dataRows, true);
     getMarkupTable(aliveCell, table);
     configData = {
@@ -195,9 +185,6 @@ export function getEditField(
     };
   } else if (element === "colField") {
     const dataCols = Number(colField.value);
-    // if (configData.maxCols < dataCols) {
-    //   dataCols = configData.maxCols;
-    // }
     aliveCell = getChangeTable(rowActual, colActual, dataCols, false);
     getMarkupTable(aliveCell, table);
     configData = {
@@ -218,6 +205,7 @@ export function getEditField(
   } else {
     const intervalData = Number(range.value);
     const intervalValue = getInterval(intervalData);
+
     configData = {
       valueRows: configData.valueRows,
       minRows: configData.minRows,
@@ -269,16 +257,18 @@ export function createStorage(): void {
     aliveStorage = getStorageArrayAlive();
   }
 
-  const rows = Number(aliveStorage.length);
-  const cols = Number(aliveStorage[0].length);
+  if(aliveStorage !== null) {
+    const rows = Number(aliveStorage.length);
+    const cols = Number(aliveStorage[0].length);
 
-  if(
-    rows !== Number(configDataActual.valueRows) ||
-    cols !== Number(configDataActual.valueCols)
-  ) {
-    localStorage.removeItem('arrayAlive');
-    const arrayAlive = 
-      getAliveList(configDataActual.valueRows, configDataActual.valueCols);
-    storageArrayAliveSave(arrayAlive);
+    if(
+      rows !== Number(configDataActual.valueRows) ||
+      cols !== Number(configDataActual.valueCols)
+    ) {
+      localStorage.removeItem('arrayAlive');
+      const arrayAlive = 
+        getAliveList(configDataActual.valueRows, configDataActual.valueCols);
+      storageArrayAliveSave(arrayAlive);
+    }
   }
 }
