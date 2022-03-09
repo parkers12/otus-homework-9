@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title><%= htmlWebpackPlugin.options.title || 'Webpack App' %></title>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></>
+    <![endif]-->
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <script>
+    function replacer(el) {
+      el.value = el.value.replace(/[^0-9+]/g, "");
+    }
+  </script>
+</html>

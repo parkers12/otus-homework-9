@@ -1,0 +1,25 @@
+/* Main styles */
+
+.primary {
+  @include flex-column;
+  width: 100%;
+  min-height: 100%;
+  overflow: auto;
+
+  &__content {
+    flex: 1 0 auto;
+
+    &-main {
+      width: $xl;
+      margin: 0 auto;
+      padding-bottom: 14rem;
+    }
+  }
+
+  &__footer {
+    flex: 0 0 auto;
+    background-color: rgba($green, 0.04);
+  }
+}
+
+/* /Main styles */
