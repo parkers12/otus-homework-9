@@ -1,13 +1,12 @@
-import config from "./config";
 import { errorMessage } from "./errorMessage";
 
 describe("errorMessage", () => {
   it("Get message with error", () => {
-    const bullitListBf = document.getElementById(config.message) as HTMLElement;
+    const bullitListBf = document.getElementById("Error") as HTMLElement;
     expect(bullitListBf).toBe(null);
     errorMessage("Test");
-    const bullitListAf = document.getElementById(config.message) as HTMLElement;
-    const isTrue = bullitListAf.classList.contains(config.message);
+    const bullitListAf = document.getElementById("Error") as HTMLElement;
+    const isTrue = bullitListAf.classList.contains("Error");
     expect(isTrue).toBe(true);
   });
 });

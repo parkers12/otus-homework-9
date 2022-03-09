@@ -1,4 +1,3 @@
-import config from "./config";
 import App from "./handlers";
 import { handlerTableClick, getStart, getStop, getClear } from "./main";
 
@@ -135,21 +134,16 @@ describe("Handlers application", () => {
         </div>
     `;
 
-  const table = document.getElementById(
-    `${config.classTable}`
-  ) as HTMLTableElement;
-  const buttonStart = document.getElementById(
-    `${config.button[0].id}`
-  ) as HTMLButtonElement;
-  const buttonStop = document.getElementById(
-    `${config.button[1].id}`
-  ) as HTMLButtonElement;
-  const buttonClear = document.getElementById(
-    `${config.button[2].id}`
-  ) as HTMLButtonElement;
-  const rangeField = document.getElementById(
-    `${config.fields[2].id}`
-  ) as HTMLInputElement;
+  const table =
+    document.getElementById("table") as HTMLTableElement;
+  const buttonStart =
+    document.getElementById("buttonStart") as HTMLButtonElement;
+  const buttonStop =
+    document.getElementById("buttonStop") as HTMLButtonElement;
+  const buttonClear =
+    document.getElementById("buttonClear",) as HTMLButtonElement;
+  const rangeField =
+    document.getElementById("range") as HTMLInputElement;
 
   test("handlerTableClick", () => {
     App();

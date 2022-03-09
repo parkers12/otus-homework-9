@@ -7,9 +7,13 @@ import {
   getClear,
   getEditField,
   tick,
+  createStorage,
 } from "./main";
 
-import { getAliveList } from "./extraFunctions";
+import {
+  getAliveList,
+  getInterval
+} from "./extraFunctions";
 
 import {
   getMarkupTable,
@@ -23,11 +27,15 @@ import {
   getUpdateTable,
   toEqualArr,
   getChangeTable,
-  getActualTable,
-  getInterval,
+  getActualTable
 } from "./control";
 
-import { storageArrayAliveSave, getStorageArrayAlive } from "./storage";
+import {
+  storageArrayAliveSave,
+  getStorageArrayAlive,
+  getStorageConfig,
+  storageConfig,
+} from "./storage";
 
 jest.mock("./storage", () => {
   const originalModule = jest.requireActual("./storage");
@@ -36,6 +44,8 @@ jest.mock("./storage", () => {
     ...originalModule,
     storageArrayAliveSave: jest.fn(),
     getStorageArrayAlive: jest.fn(),
+    getStorageConfig: jest.fn(),
+    storageConfig: jest.fn(),
   };
 });
 
@@ -49,7 +59,6 @@ jest.mock("./control", () => {
     getCountAliveCells: jest.fn(),
     handleButton: jest.fn(),
     getNewAliveList: jest.fn(),
-    getInterval: jest.fn(),
     getUpdateArray: jest.fn(),
     getUpdateTable: jest.fn(),
     toEqualArr: jest.fn(),
@@ -67,6 +76,7 @@ jest.mock("./extraFunctions", () => {
     __esModule: true,
     ...originalModule,
     getAliveList: jest.fn(),
+    getInterval: jest.fn()
   };
 });
 
@@ -191,38 +201,23 @@ describe("Test handlers", () => {
             </main>
         </div>
     `;
-  const row: number = config.fields[0].value;
-  const col: number = config.fields[1].value;
+  const row: number = config.valueRows;
+  const col: number = config.valueCols;
 
-  const table = document.getElementById(
-    `${config.classTable}`
-  ) as HTMLTableElement;
-  const buttonStart = document.getElementById(
-    `${config.button[0].id}`
-  ) as HTMLButtonElement;
-  const buttonStop = document.getElementById(
-    `${config.button[1].id}`
-  ) as HTMLButtonElement;
-  const buttonClear = document.getElementById(
-    `${config.button[2].id}`
-  ) as HTMLButtonElement;
-  const rowField = document.getElementById(
-    `${config.fields[0].id}`
-  ) as HTMLInputElement;
-  const colField = document.getElementById(
-    `${config.fields[1].id}`
-  ) as HTMLInputElement;
-  const rangeField = document.getElementById(
-    `${config.fields[2].id}`
-  ) as HTMLInputElement;
-
-  // const aliveList = [
-  //     [0, 0, 0, 0, 0],
-  //     [0, 0, 0, 0, 0],
-  //     [0, 0, 0, 0, 0],
-  //     [0, 0, 0, 0, 0],
-  //     [0, 0, 0, 0, 0]
-  // ];
+  const table =
+    document.getElementById("table") as HTMLTableElement;
+  const buttonStart =
+    document.getElementById("buttonStart") as HTMLButtonElement;
+  const buttonStop =
+    document.getElementById("buttonStop") as HTMLButtonElement;
+  const buttonClear =
+    document.getElementById("buttonClear") as HTMLButtonElement;
+  const rowField =
+    document.getElementById("rowField") as HTMLInputElement;
+  const colField =
+    document.getElementById("colField") as HTMLInputElement;
+  const rangeField =
+    document.getElementById("range") as HTMLInputElement;
 
   test("Click on a cell table", () => {
     const mEvent: any = {
@@ -234,7 +229,7 @@ describe("Test handlers", () => {
       },
     } as unknown as Event;
 
-    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() =>[
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -242,7 +237,7 @@ describe("Test handlers", () => {
       [0, 0, 0, 0, 0],
     ]);
 
-    handlerTableClick(mEvent, table, buttonStart, buttonClear);
+    handlerTableClick(mEvent, buttonStart, buttonClear);
 
     expect(getPosClick).toHaveBeenCalled();
     expect(getToggleClass).toHaveBeenCalled();
@@ -265,22 +260,49 @@ describe("Test handlers", () => {
     (toEqualArr as unknown as jest.Mock).mockImplementation(() => 1);
     (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 0);
 
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
+      {
+        valueRows: 5,
+        minRows: 3,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 5,
+        minCols: 3,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1000,
+      })
+    );
+
     jest.runOnlyPendingTimers();
 
-    getStart(table, rangeField, buttonStop, buttonStart, buttonClear, row, col);
+    getStart(
+      table,
+      rangeField,
+      buttonStop,
+      buttonStart,
+      buttonClear,
+      rowField,
+      colField
+    );
 
+    expect(getStorageConfig).toHaveBeenCalled();
     expect(getCountAliveCells).toHaveBeenCalled();
     expect(handleButton).toHaveBeenCalled();
   });
 
   test("Click on a stop button", () => {
-    getStop(table, buttonStop, buttonStart, buttonClear);
+    getStop(buttonStop, buttonStart, buttonClear, rowField, colField);
     expect(getCountAliveCells).toHaveBeenCalled();
     expect(handleButton).toHaveBeenCalled();
   });
 
   test("Click on a clear button", () => {
-    getClear(table, buttonStart, buttonClear, row, col);
+    getClear(buttonStart, buttonClear, row, col);
     expect(clearTable).toHaveBeenCalled();
     expect(getCountAliveCells).toHaveBeenCalled();
     expect(handleButton).toHaveBeenCalled();
@@ -290,11 +312,30 @@ describe("Test handlers", () => {
   test("Click on a row field", () => {
     const mEvent: any = {
       target: {
-        getAttribute: jest.fn().mockReturnValueOnce(config.fields[0].id),
+        getAttribute: jest.fn().mockReturnValueOnce("rowField"),
       },
     } as unknown as Event;
 
     (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
+
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
+      {
+        valueRows: 5,
+        minRows: 3,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 5,
+        minCols: 3,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1000,
+      })
+    );
+
     (getChangeTable as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -306,20 +347,50 @@ describe("Test handlers", () => {
 
     rowField.value = "6";
 
-    getEditField(mEvent, table, rowField, colField, buttonStart, buttonClear);
+    getEditField(
+      mEvent,
+      table,
+      rowField,
+      colField,
+      rangeField,
+      buttonStart,
+      buttonClear
+    );
+
     expect(getActualTable).toHaveBeenCalled();
+    expect(getStorageConfig).toHaveBeenCalled();
     expect(getChangeTable).toHaveBeenCalled();
     expect(getMarkupTable).toHaveBeenCalled();
+    expect(storageConfig).toHaveBeenCalled();
   });
 
   test("Click on a col field", () => {
     const mEvent: any = {
       target: {
-        getAttribute: jest.fn().mockReturnValueOnce(config.fields[1].id),
+        getAttribute: jest.fn().mockReturnValueOnce("colField"),
       },
     } as unknown as Event;
 
     (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
+
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
+      {
+        valueRows: 5,
+        minRows: 3,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 5,
+        minCols: 3,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1000,
+      })
+    );
+
     (getChangeTable as unknown as jest.Mock).mockImplementation(() => [
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
@@ -330,10 +401,113 @@ describe("Test handlers", () => {
 
     colField.value = "6";
 
-    getEditField(mEvent, table, rowField, colField, buttonStart, buttonClear);
+    getEditField(
+      mEvent,
+      table,
+      rowField,
+      colField,
+      rangeField,
+      buttonStart,
+      buttonClear
+    );
+
     expect(getActualTable).toHaveBeenCalled();
+    expect(getStorageConfig).toHaveBeenCalled();
     expect(getChangeTable).toHaveBeenCalled();
     expect(getMarkupTable).toHaveBeenCalled();
+    expect(storageConfig).toHaveBeenCalled();
+  });
+
+  test("Click on a range field", () => {
+    const mEvent: any = {
+      target: {
+        getAttribute: jest.fn().mockReturnValueOnce("range"),
+      },
+    } as unknown as Event;
+
+    (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
+
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
+      {
+        valueRows: 5,
+        minRows: 3,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 5,
+        minCols: 3,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1500,
+      })
+    );
+
+    (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 0);
+
+    (getInterval as unknown as jest.Mock).mockImplementation(() => 500);
+
+    rangeField.value = "5";
+
+    buttonClear.disabled = false;
+    buttonStart.disabled = false;
+
+    getEditField(
+      mEvent,
+      table,
+      rowField,
+      colField,
+      rangeField,
+      buttonStart,
+      buttonClear
+    );
+
+    expect(storageConfig).toHaveBeenCalled();
+    expect(handleButton).toHaveBeenCalled();
+  });
+
+  test("Click on a range field", () => {
+    const mEvent: any = {
+      target: {
+        getAttribute: jest.fn().mockReturnValueOnce("range"),
+      },
+    } as unknown as Event;
+
+    (getActualTable as unknown as jest.Mock).mockImplementation(() => [5, 5]);
+
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
+      {
+        valueRows: 5,
+        minRows: 3,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 5,
+        minCols: 3,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1500,
+      })
+    );
+
+    rangeField.value = "5";
+
+    getEditField(
+      mEvent,
+      table,
+      rowField,
+      colField,
+      rangeField,
+      buttonStart,
+      buttonClear
+    );
+
+    expect(getInterval).toHaveBeenCalled();
   });
 
   test("Test function tick", () => {
@@ -345,10 +519,39 @@ describe("Test handlers", () => {
       [0, 0, 0, 0, 0],
     ]);
 
-    tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
+      {
+        valueRows: 5,
+        minRows: 3,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 5,
+        minCols: 3,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1000,
+      })
+    );
+
+    (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 0);
+    
+    tick(
+      table,
+      rangeField,
+      buttonStop,
+      buttonStart,
+      buttonClear,
+      rowField,
+      colField
+    );
+
     expect(getStorageArrayAlive).toHaveBeenCalled();
+    expect(getStorageConfig).toHaveBeenCalled();
     expect(getUpdateArray).toHaveBeenCalled();
-    expect(getInterval).toHaveBeenCalled();
     expect(getUpdateTable).toHaveBeenCalled();
     expect(toEqualArr).toHaveBeenCalled();
     expect(getCountAliveCells).toHaveBeenCalled();
@@ -358,31 +561,170 @@ describe("Test handlers", () => {
     (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 1);
     (toEqualArr as unknown as jest.Mock).mockImplementation(() => true);
 
-    tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
+    tick(
+      table,
+      rangeField,
+      buttonStop,
+      buttonStart,
+      buttonClear,
+      rowField,
+      colField
+    );
 
-    expect(buttonStart.disabled).toBe(true);
+    expect(buttonStart.disabled).toBe(false);
   });
 
   test("Go new iteration", () => {
     (getCountAliveCells as unknown as jest.Mock).mockImplementation(() => 1);
     (toEqualArr as unknown as jest.Mock).mockImplementation(() => false);
 
-    tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
+    tick(
+      table,
+      rangeField,
+      buttonStop,
+      buttonStart,
+      buttonClear,
+      rowField,
+      colField
+    );
 
-    expect(buttonStart.disabled).toBe(true);
+    expect(buttonStart.disabled).toBe(false);
   });
 
   test("New time interval", () => {
     (getInterval as unknown as jest.Mock).mockImplementation(() => 1000);
-    tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
+    tick(
+      table,
+      rangeField,
+      buttonStop,
+      buttonStart,
+      buttonClear,
+      rowField,
+      colField
+    );
 
     expect(getUpdateArray).toHaveBeenCalled();
   });
 
   test("New time interval", () => {
     (getInterval as unknown as jest.Mock).mockImplementation(() => 5000);
-    tick(table, row, col, rangeField, buttonStop, buttonStart, buttonClear);
+    tick(
+      table,
+      rangeField,
+      buttonStop,
+      buttonStart,
+      buttonClear,
+      rowField,
+      colField
+    );
 
     expect(getUpdateArray).toHaveBeenCalled();
+  });
+
+  test("createStorage", () => {
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(
+      () => null);
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(
+      () => null);
+
+    createStorage();
+
+    expect(storageConfig).toHaveBeenCalled();
+    expect(getStorageArrayAlive).toHaveBeenCalled();
+    expect(storageArrayAliveSave).toHaveBeenCalled();
+    expect(getAliveList).toHaveBeenCalled();
+
+  });
+
+  test("createStorage", () => {
+    localStorage.removeItem('arrayAlive');
+    localStorage.removeItem('config');
+    const emptyArr = getStorageArrayAlive();
+    const emptyConf = 
+    JSON.parse(localStorage.getItem("config") as string);
+    expect(emptyArr).toBe(null);
+    expect(emptyConf).toBe(null);
+    const arrayAlive = [
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+    ];
+
+    createStorage();
+
+    expect(getStorageConfig).toHaveBeenCalled();
+    expect(storageConfig).toHaveBeenCalled();
+    expect(getStorageArrayAlive).toHaveBeenCalled();
+    expect(storageArrayAliveSave).toHaveBeenCalled();
+    expect(getAliveList).toHaveBeenCalled();
+
+    localStorage.setItem("arrayAlive", JSON.stringify(arrayAlive));
+
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
+      {
+        valueRows: 5,
+        minRows: 3,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 5,
+        minCols: 3,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1000,
+      })
+    );
+
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0]
+    ]);
+    
+    createStorage();
+
+    const arr = getStorageArrayAlive();
+
+    expect(arrayAlive).toStrictEqual(arr);
+  });
+
+  test("update storage", () => {
+    (getStorageConfig as unknown as jest.Mock).mockImplementation(() => (
+      {
+        valueRows: 5,
+        minRows: 3,
+        maxRows: 20,
+        stepRows: 1,
+        valueCols: 5,
+        minCols: 3,
+        maxCols: 20,
+        stepCols: 1,
+        valueRange: 3,
+        minRange: 1,
+        maxRange: 5,
+        stepRange: 1,
+        interval: 1000,
+      })
+    );
+
+    (getStorageArrayAlive as unknown as jest.Mock).mockImplementation(() => [
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+    ]);
+
+    createStorage();
+
+    expect(storageArrayAliveSave).toHaveBeenCalled();
   });
 });
